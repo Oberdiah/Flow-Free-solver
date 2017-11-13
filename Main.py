@@ -28,6 +28,9 @@ while done == False:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			done = True
+		if event.type == pygame.KEYDOWN:
+			if event.key == pygame.K_LEFT:
+				pass
 
 	screen.fill((0,0,0))
 	
@@ -50,6 +53,8 @@ while done == False:
 
 				pygame.draw.line(screen, tile.color, loc, center, int(s/4))
 	
+
+
 	pygame.display.update()
 	clock.tick(20)
  
