@@ -1,31 +1,27 @@
 import pygame
-import Constants
+import Constants as c
+import Library as l
+from GenerateNew import generateNew
 from random import random, choice
 
 pygame.init()
-size = [Constants.BOXSIZE*Constants.GRIDSIZE, Constants.BOXSIZE*Constants.GRIDSIZE]
+size = [c.BOXSIZE*c.GRIDSIZE, c.BOXSIZE*c.GRIDSIZE]
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption('My Game')
 clock = pygame.time.Clock()
-
-# Essentially a directions Enum
-class D():
-	n = (0,1)
-	s = (0,-1)
-	e = (1,0)
-	w = (-1,0)
-	u = (0,0)
-
-allDirections = [D.n, D.s, D.e, D.w]
 
 class Tile():
 	def __init__(self, x, y):
 		self.x = x
 		self.y = y
-		self.color = (int(random()*255), int(random()*255), int(random()*255))
-		self.directions = [choice(allDirections), choice(allDirections)]
+		# If it is a node then only the first direction is ever used
+		self.isNode = False
+		self.color = l.randomColor()
+		self.directions = [c.D.u, c.D.u]
 
-grid = [[Tile(x, y) for x in range(Constants.GRIDSIZE)] for y in range(Constants.GRIDSIZE)]
+c.grid = [[Tile(x, y) for y in range(c.GRIDSIZE)] for x in range(c.GRIDSIZE)]
+
+generateNew()
 
 done = False
 while done == False:
@@ -35,14 +31,18 @@ while done == False:
 
 	screen.fill((0,0,0))
 	
-	for x, col in enumerate(grid):
+	for x, col in enumerate(c.grid):
 		for y, tile in enumerate(col):
-			s = Constants.BOXSIZE
-			gt = Constants.GRIDTHICKNESS
+			s = c.BOXSIZE
+			gt = c.GRIDTHICKNESS
 			center = (int((x+0.5)*s), int((y+0.5)*s))
 			pygame.draw.rect(screen, (255,255,255), (x*s+(gt/2), y*s+(gt/2), s-gt, s-gt))
 
-			pygame.draw.circle(screen, tile.color, center, int(s/8))
+			rad = int(s/8)
+			if tile.isNode:
+				rad = int(s/4)
+
+			pygame.draw.circle(screen, tile.color, center, rad)
 
 			for i in range(2):
 				directionBias = (tile.directions[i][0]/2, tile.directions[i][1]/2)
