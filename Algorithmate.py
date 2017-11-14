@@ -102,10 +102,18 @@ def trytrivials(grid):
 				continue
 			adjacents = l.getAdjacentsWithDirections(tile)
 			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
+			adjacents = [x for x in adjacents if not connected(x[0],tile)]#get rid of connected tiles
+			adjacents = [x for x in adjacents if not isWall(x[0])]#get rid of wall tiles
+			#get rid of heads that are not the same color as this
+			adjacents = [x for x in adjacents if not (l.isHead(x[0]) and x[0].number!=tile.number)]
+			"""
 			#if a tile has at least one unknown direction, it is not an invalid move (assuming it is not a head)
 			adjacents = [x for x in adjacents if x[0].directions[0] is c.D.u or x[0].directions[1] is c.D.u]
 			#if x is a starting head and it has one known direction, it is an invalid move
-			adjacents = [x for x in adjacents if not (x[0].isNode and not l.hasDirection(x[0]) and not x[0].number==tile.number)]
+			adjacents = [x for x in adjacents if not (x[0].isNode and l.hasNoDirection(x[0]) and not x[0].number==tile.number)]
+			#ignore parts where it would travel backwards to reach
+			adjacents = [x for x in adjacents if not (connected(x[0],tile))]
+			"""
 			#if adjacents is only size 1, it only has one possible move:
 			if len(adjacents) == 1:
 				direc = adjacents[0][1]
@@ -131,3 +139,9 @@ def trytrivials(grid):
 				direc = adjacents[0][1]
 				l.addDirection(tile,direc)
 				l.addDirection(adjacents[0][0],l.getOpposite(direc))
+
+def connected(a,b):
+	return a in l.getAllInPath(b)
+
+def isWall(tile):
+	return not l.isHead(tile) and tile.number!=-1
