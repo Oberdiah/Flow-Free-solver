@@ -101,14 +101,12 @@ def trytrivials(grid):
 			adjacents = [x for x in adjacents if not (x[0].isNode and not l.hasDirection(x[0]) and not x[0].number==tile.number)]
 			#if adjacents is only size 1, it only has one possible move:
 			if len(adjacents) == 1:
-				#print("Found goodies")
 				direc = adjacents[0][1]
-				if tile.directions[0]==c.D.u:
-					tile.directions[0]=direc
-				elif tile.directions[1]==c.D.u:
-					tile.directions[1]=direc
-				else:
-					assert "Error: tile already going EVERYWHERE!  SPLAT."
+				addDirection(tile,direc)
+				addDirection(adjacents[0][0],l.getOpposite(direc))
+				adjacents[0][0].color = tile.color
+				adjacents[0][0].number = tile.number
+
 
 	#Trivial 2
 	#			Runtime: O(n^2)
@@ -124,12 +122,17 @@ def trytrivials(grid):
 			#if adjacents is size 1, it is the required move:
 			if len(adjacents)==1:
 				direc = adjacents[0][1]
-				if tile.directions[0]==c.D.u:
-					tile.directions[0]=direc
-				elif tile.directions[1]==c.D.u:
-					tile.directions[1]=direc
-				else:
-					assert "Error: tile already going EVERYWHERE!  SPLAT."
+				addDirection(tile,direc)
+				addDirection(adjacents[0][0],l.getOpposite(direc))
+
+
+def addDirection(tile,direc):
+	if tile.directions[0]==c.D.u:
+		tile.directions[0]=direc
+	elif tile.directions[1]==c.D.u:
+		tile.directions[1]=direc
+	else:
+		assert "Error: tile already going EVERYWHERE!  SPLAT."
 
 def hasSingleDirection(tile):
 	return (tile.directions[0]==c.D.u and tile.directions[1]!=c.D.u) or (tile.directions[0]!=c.D.u and tile.directions[1]==c.D.u)
