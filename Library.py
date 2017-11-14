@@ -62,6 +62,9 @@ def getNodeDirection(node):
 def getAdjacents(tile):
 	return [getNextTo(tile, *d) for d in c.allDirections]
 
+def getAdjacentsWithDirections(tile):
+	return [(getNextTo(tile, *d),d) for d in c.allDirections]
+
 def getNextTo(tile, dx, dy):
 	gx = tile.x + dx
 	gy = tile.y + dy
