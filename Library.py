@@ -38,9 +38,33 @@ def hasNoDirection(n1):
 def hasDirection(n1):
 	return not hasNoDirection(n1)
 
-def getNextTo(tile, x, y):
-	gx = tile.x + x
-	gy = tile.y + y
+def getAllInPath(n1):
+	all = [n1]
+	for d in n1.directions:
+		if d != c.D.u:
+			all.extend(getAllInPathFromDirection(n1, getNextTo(n1, *d), []))
+	return all
+
+def getAllInPathFromDirection(tileBefore, tile, currentStack):
+	currentStack.append(tile)
+	if not tile.isNode:
+		newTile = getNextTo(tile, *tile.directions[0])
+		if newTile == tileBefore:
+			newTile = getNextTo(tile, *tile.directions[1])
+		getAllInPathFromDirection(tile, newTile, currentStack)
+	return currentStack
+
+def getNodeDirection(node):
+	for d in node.directions:
+		if d != c.D.u:
+			return d
+
+def getAdjacents(tile):
+	return [l.getNextTo(tile, *d) for d in c.allDirections]
+
+def getNextTo(tile, dx, dy):
+	gx = tile.x + dx
+	gy = tile.y + dy
 
 	# Check if we're still on the board
 	if gx >= c.GRIDSIZE or gy >= c.GRIDSIZE or gx < 0 or gy < 0:
