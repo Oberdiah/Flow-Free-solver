@@ -60,7 +60,7 @@ def getNodeDirection(node):
 			return d
 
 def getAdjacents(tile):
-	return [l.getNextTo(tile, *d) for d in c.allDirections]
+	return [getNextTo(tile, *d) for d in c.allDirections]
 
 def getNextTo(tile, dx, dy):
 	gx = tile.x + dx
@@ -69,7 +69,7 @@ def getNextTo(tile, dx, dy):
 	# Check if we're still on the board
 	if gx >= c.GRIDSIZE or gy >= c.GRIDSIZE or gx < 0 or gy < 0:
 		return None
-	
+
 	return tile.grid[gx][gy]
 
 def randomColor():
@@ -90,4 +90,3 @@ def addDirection(n1, d1):
 			return
 
 	assert False, "There was no free direction to add"
-		
