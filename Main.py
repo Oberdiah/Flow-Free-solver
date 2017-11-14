@@ -2,7 +2,7 @@ import pygame
 import Constants as c
 import Library as l
 import GenerateNew
-from random import random, choice
+from random import random, choice, getstate, setstate, seed
 import Algorithmate
 
 pygame.init()
@@ -44,6 +44,8 @@ c.solutionGrid = [[Tile(x, y) for y in range(c.GRIDSIZE)] for x in range(c.GRIDS
 for tile in l.expandGrid(c.solutionGrid):
 	tile.grid = c.solutionGrid
 
+# Start the same every time
+setstate(eval(open('state.txt').read()))
 GenerateNew.generateNew()
 
 showSolution = False

@@ -1,5 +1,5 @@
 import Constants as c
-from random import random, choice, randint
+from random import random, choice, randint, getstate
 import Library as l
 
 colorList = []
@@ -7,6 +7,9 @@ failureNum = 0
 
 def generateNew():
 	global failureNum
+
+	print(getstate())
+
 	for tile in l.expandGrid(c.solutionGrid):
 		tile.resetMe()
 	colorList.clear()
