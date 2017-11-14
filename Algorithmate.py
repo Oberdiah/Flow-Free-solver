@@ -37,6 +37,24 @@ import Library as l
 #the sets of invalid solutions to both is equivalent, and thus the set of valid
 #solutions is equivalent.
 
+#Some definitions (only applies to proofs and may not reflect variable names
+#	in the code):
+#
+#A 'grid' is the board that Flow is played on
+#A 'node' is a tile on the grid
+#A 'path' is an ordered set of nodes such that no two nodes adjacent in the path
+#	are non-adjacent on the grid.
+#A 'head' is a node on the end of a path
+#	Note that whether a node is or isn't a head can change, depending on how much
+#	the player knows about the board:
+#	A @ @ @ A, As are heads @s are empty
+#   A A @ @ A, All 3 As are heads
+#   A A A @ A, All As are heads, but the second one from the left
+#   A A A A A, only the leftmost and rightmost As are heads
+#A 'square' is any set of 4 nodes with a common vertex all belonging
+#to the same path
+#A 'loop' is [insert a rigorous definition here]
+
 def trysolve():
 	#print(c.grid)
 	trytrivials(c.computerGrid)
@@ -45,7 +63,7 @@ def trytrivials(grid):
 	#This function attempts trivial solves on the grid.
 	#A trivial solve is the following:
 	#If a head node has 1 adjacency and only 1, it must
-	#move there.  This is provable:
+	#pass through there.  This is provable:
 	#Let H be a head node with one adjacency A.  There must be a path P from H
 	#to its corresponding H'.  Let P pass through an adjacency other than A.
 	#Then, there is a contradiction, as there is no such adjacency other than A.
@@ -54,14 +72,15 @@ def trytrivials(grid):
 	#grid = l.cloneGrid(grid)
 	for row in grid:
 		for tile in row:
-			adjacents = [[l.getNextTo(tile,0,1),c.D.n],[l.getNextTo(tile,0,-1),c.D.s],[l.getNextTo(tile,1,0),c.D.e],[l.getNextTo(tile,-1,0),c.D.w]]
+			adjacents = getAdjacents(tile)
 			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
-			#if a tile has at least one unknown direction, it is not a wall (assuming it is not a head)
+			#if a tile has at least one unknown direction, it is not an invalid move (assuming it is not a head)
 			adjacents = [x for x in adjacents if x[0].directions[0] is c.D.u or x[0].directions[1] is c.D.u]
-			#if x is head and it has one known direction, it is a wall
+			#if x is head and it has one known direction, it is an invalid move
 			adjacents = [x for x in adjacents if not (x[0].isNode and (x[0].directions[0] is not c.D.u or x[0].directions[1] is not c.D.u))]
 			#if adjacents is only size 1, it only has one possible move:
 			if len(adjacents) == 1:
+				print("Found goodies")
 				direc = adjacents[0][1]
 				if tile.directions[0]==c.D.u:
 					tile.directions[0]=direc
