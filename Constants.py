@@ -3,7 +3,7 @@ GRIDSIZE = 20
 # Size of boxes (In pixels) (Must be even)
 BOXSIZE = 1000//GRIDSIZE
 # Grid thickness (Must be even)
-GRIDTHICKNESS = 0
+GRIDTHICKNESS = 2
 # The minimum snake length
 MINIMUMSNAKELENGTH = GRIDSIZE*3
 # Chance for a snake to end every new piece after MINSNAKELENGTH:
