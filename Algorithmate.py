@@ -87,7 +87,12 @@ def trytrivials(grid):
 	#			P would completely enclose some region of the board R, as paths
 	#			are contiguous and the two heads are next two eachother causing
 	#			the ends of the paths to also be adjacent.  Therefore it violates
-	#			the condition of topological equivalency to a line
+	#			the condition of topological equivalency to a line.
+	#		Alternate Proof:
+	#			If they were not to connect, there would have to be some other
+	#			valid path P between them.  However, if that were the case, the
+	#			starting heads of P would be adjacent but not sequential in P,
+	#			thus forming a loop.
 
 	#Trivial 1
 	#			Runtime: O(n^2)
