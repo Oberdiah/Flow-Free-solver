@@ -63,7 +63,7 @@ def createPaths():
 		if not tile.isNode and tile.directions[1] == c.D.u:
 			tile.isNode = True
 			colorList.append(l.randomColor())
-			doNodeStuff(tile, c.D.w, len(colorList)-1, 0)
+			doNodeStuff(tile, choice(c.allDirections), len(colorList)-1, 0)
 			# Make sure that all nodes have their first direction as their output
 			tile.directions[0] = tile.directions[1]
 			tile.directions[1] = c.D.u
