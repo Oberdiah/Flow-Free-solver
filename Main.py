@@ -3,6 +3,7 @@ import Constants as c
 import Library as l
 import GenerateNew
 from random import random, choice
+import Algorithmate
 
 pygame.init()
 myfont = pygame.font.SysFont("monospace", int(c.BOXSIZE/2))
@@ -58,9 +59,11 @@ while done == False:
 				testingFunc()
 			if event.key == pygame.K_s:
 				showSolution = not showSolution
+			if event.key == pygame.K_space:
+				trysolve()
 
 	screen.fill((0,0,0))
-	
+
 	for x, col in enumerate(c.grid):
 		for y, tile in enumerate(col):
 			s = c.BOXSIZE
@@ -88,8 +91,8 @@ while done == False:
 				text = myfont.render(str(tile.number+1), 1, (0,0,0))
 				rect = text.get_rect()
 				screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
-	
+
 	pygame.display.update()
 	clock.tick(20)
- 
+
 pygame.quit()
