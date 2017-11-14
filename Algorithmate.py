@@ -68,4 +68,4 @@ def trytrivials(grid):
 				elif tile.directions[1]==c.D.u:
 					tile.directions[1]=direc
 				else:
-					assert "Error tile already going EVERYWHERE!  SPLAT."
+					assert "Error: tile already going EVERYWHERE!  SPLAT."

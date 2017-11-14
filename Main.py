@@ -47,6 +47,7 @@ for tile in l.expandGrid(c.solutionGrid):
 GenerateNew.generateNew()
 
 showSolution = False
+showComputer = False
 
 def testingFunc():
 	#fixSquares()
@@ -63,14 +64,22 @@ while done == False:
 				print("Resetting map ...")
 				testingFunc()
 			if event.key == pygame.K_s:
+				print("Toggling showing solution")
 				showSolution = not showSolution
 			if event.key == pygame.K_SPACE:
+				print("Performing algorithm step")
+				showComputer = True
 				Algorithmate.trysolve()
+			if event.key == pygame.K_c:
+				print("Toggling showing computer")
+				showComputer = not showComputer
 
 	screen.fill((0,0,0))
 
 	if showSolution:
 		grid = c.solutionGrid
+	elif showComputer:
+		grid = c.computerGrid
 	else:
 		grid = c.userGrid
 
