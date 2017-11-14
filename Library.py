@@ -128,3 +128,9 @@ def isHead(tile):
 	elif (not tile.isNode) and hasSingleDirection(tile):
 		return True
 	return False
+
+def connected(a,b):
+	return a in getAllInPath(b)
+
+def isWall(tile):
+	return not isHead(tile) and tile.number!=-1
