@@ -59,7 +59,7 @@ while done == False:
 				testingFunc()
 			if event.key == pygame.K_s:
 				showSolution = not showSolution
-			if event.key == pygame.K_space:
+			if event.key == pygame.K_SPACE:
 				trysolve()
 
 	screen.fill((0,0,0))
