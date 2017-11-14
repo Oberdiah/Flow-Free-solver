@@ -2,107 +2,81 @@ import Constants as c
 from random import random, choice, randint
 import Library as l
 
+colorList = []
+failureNum = 0
+
 def generateNew():
+	global failureNum
+	for tile in l.expandGrid():
+		tile.resetMe()
+	colorList.clear()
+
+	nodesNumber = 0
 	for tile in l.shuffle(l.expandGrid()):
 		if not tile.isNode and tile.directions[1] == c.D.u:
 			tile.isNode = True
-			doNodeStuff(tile, c.D.w, l.randomColor(), 0)
+			colorList.append(l.randomColor())
+			doNodeStuff(tile, c.D.w, len(colorList)-1, 0)
 			# Make sure that all nodes have their first direction as their output
 			tile.directions[0] = tile.directions[1]
 			tile.directions[1] = c.D.u
 
-	sortErrors()
+	mergeNodes()
+	mergeNodesNew()
+	checkForRedo()
+	failureNum = 0
 
-def sortErrors():
+def mergeNodesNew():
+	for tile in l.expandGrid():
+		if tile.isNode and tile.directions[0] == c.D.u and tile.directions[1] == c.D.u:
+			for p in c.allDirections:
+				nextTo = l.getNextTo(tile, *p)
+				if nextTo:
+					ntn1 = l.getNextTo(nextTo, *nextTo.directions[0])
+					ntn2 = l.getNextTo(nextTo, *nextTo.directions[1])
+					if not nextTo.isNode and not ntn1.isNode and not ntn2.isNode:
+						nextTo.color = tile.color
+						l.breakBond(nextTo, ntn1)
+						l.breakBond(nextTo, ntn2)
+						ntn1.isNode = True
+						ntn2.isNode = True
+						nextTo.isNode = True
+						tile.directions[0] = p
+						nextTo.directions[1] = l.getOpposite(p)
+						nextTo.directions[0] = c.D.u
+						break
+			
+def mergeNodes():
 	# Merge all single nodes
 	for tile in l.expandGrid():
 		if tile.isNode and tile.directions[0] == c.D.u and tile.directions[1] == c.D.u:
 			for p in c.allDirections:
 				nextTo = l.getNextTo(tile, *p)
-				if nextTo and nextTo.isNode:
+				if nextTo and nextTo.isNode and validExtension(nextTo, tile):
 					tile.color = nextTo.color
 					if nextTo.directions[0] != c.D.u or nextTo.directions[1] != c.D.u:
 						nextTo.isNode = False
 					tile.directions[0] = p
 					nextTo.directions[1] = l.getOpposite(p)
 					break
-		
-	# Fix squares
-	for n1 in l.expandGrid():
-		co = n1.color
-		n2 = l.getNextTo(n1, 0, 1)
-		n3 = l.getNextTo(n1, 1, 0)
-		n4 = l.getNextTo(n1, 1, 1)
-		newColor = l.randomColor()
-		if n2 and n3 and n4 and n2.color == co and n3.color == co and n4.color == co:
-			if n1.isNode + n2.isNode + n3.isNode + n4.isNode == 1:
-				breakageMap = { (n1, c.D.e): (n2,n4),
-								(n1, c.D.s): (n3,n4),
-								(n2, c.D.w): (n1,n3),
-								(n2, c.D.s): (n3,n4),
-								(n3, c.D.e): (n2,n4),
-								(n3, c.D.n): (n1,n2),
-								(n4, c.D.n): (n1,n2),
-								(n4, c.D.w): (n1,n3),
-								}
-				colorMap =    { (n1, c.D.e): (n1,n2),
-								(n1, c.D.s): (n1,n3),
-								(n2, c.D.w): (n1,n2),
-								(n2, c.D.s): (n2,n4),
-								(n3, c.D.e): (n3,n4),
-								(n3, c.D.n): (n1,n3),
-								(n4, c.D.n): (n2,n4),
-								(n4, c.D.w): (n3,n4),
-								}
 
-				for (n, d) in breakageMap:
-					if n.isNode and d in n.directions:
-						br1, br2 = breakageMap[(n, d)]
-						br1.isNode = True
-						br2.isNode = True
-						breakBond(br1,br2)
 
-						co1, co2 = colorMap[(n, d)]
-						co1.color = newColor
-						co2.color = newColor
-						break
-			else:
-				
-				breakageMap = { (n1,n2): (n3,n4),
-								(n2,n4): (n1,n3),
-								(n3,n4): (n1,n2),
-								(n1,n3): (n2,n4)}
-				colorMap =    { (n1,n2): (n1,n3),
-								(n2,n4): (n1,n2),
-								(n3,n4): (n1,n3),
-								(n1,n3): (n3,n4)}
-
-				newColor = l.randomColor()
-				for (n, p) in breakageMap:
-					if n.isNode and p.isNode:
-						br1, br2 = breakageMap[(n, p)]
-						br1.isNode = True
-						br2.isNode = True
-						breakBond(br1,br2)
-
-						co1, co2 = colorMap[(n, p)]
-						co1.color = newColor
-						co2.color = newColor
-
-						break
-					
-def breakBond(n1, n2):
-	for (i1, d1) in enumerate(n1.directions):
-		for (i2, d2) in enumerate(n2.directions):
-			if d1 == l.getOpposite(d2) and l.getNextTo(n1, *d1) == n2 and l.getNextTo(n2, *d2) == n1 :
-				n1.directions[i1] = n2.directions[i2] = c.D.u
+def checkForRedo():
+	global failureNum
+	for tile in l.expandGrid():
+		if tile.isNode and tile.directions[0] == c.D.u and tile.directions[1] == c.D.u:
+			failureNum += 1
+			print("Single found at {}, {}. Regenerating map. This is attempt {}".format(tile.x, tile.y, failureNum))
+			generateNew()
+			break
 
 
 def doNodeStuff(me, dIn, color, length):
 	x = me.x
 	y = me.y
 
-	me.color = color
+	me.color = colorList[color]
+	me.number = color
 
 	if random() < c.SNAKEENDCHANCE and length > c.MINIMUMSNAKELENGTH:
 		me.isNode = True
@@ -129,8 +103,11 @@ def doNodeStuff(me, dIn, color, length):
 	me.isNode = True
 
 def validExtension(head, going):
+	if not going:
+		return False
+
 	# Check if we've been there before
-	if not going or going.isNode or going.directions[1] != c.D.u:
+	if going.directions[0] != c.D.u or going.directions[1] != c.D.u:
 		return False
 
 	# Check if we're making squares

@@ -1,17 +1,19 @@
 # Size of overall grid (In boxes)
-GRIDSIZE = 50
+GRIDSIZE = 10
 # Size of boxes (In pixels) (Must be even)
-BOXSIZE = 20
+BOXSIZE = 1000//GRIDSIZE
 # Grid thickness (Must be even)
-GRIDTHICKNESS = 2
+GRIDTHICKNESS = 0
 # The minimum snake length
-MINIMUMSNAKELENGTH = 100
+MINIMUMSNAKELENGTH = GRIDSIZE*3
 # Chance for a snake to end every new piece after MINSNAKELENGTH:
 SNAKEENDCHANCE = 0.2
 # Straightness of lines
-STRAIGHTNESS = 2
+STRAIGHTNESS = GRIDSIZE
 
 grid = []
+emptyGrid = []
+solutionGrid = []
 
 # Essentially a directions Enum
 class D():
