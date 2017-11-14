@@ -4,11 +4,12 @@ import Library as l
 
 colorList = []
 failureNum = 0
+lastState = 0
 
 def generateNew():
-	global failureNum
+	global failureNum, lastState
 
-	print(getstate())
+	lastState = getstate()
 
 	for tile in l.expandGrid(c.solutionGrid):
 		tile.resetMe()

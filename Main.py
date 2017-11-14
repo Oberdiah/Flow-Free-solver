@@ -51,6 +51,8 @@ GenerateNew.generateNew()
 showSolution = False
 showComputer = False
 
+mouseDragging = False
+
 def testingFunc():
 	#fixSquares()
 	GenerateNew.generateNew()
@@ -75,6 +77,20 @@ while done == False:
 			if event.key == pygame.K_c:
 				print("Toggling showing computer")
 				showComputer = not showComputer
+			if event.key == pygame.K_y:
+				print(GenerateNew.lastState)
+
+		if event.type == pygame.MOUSEBUTTONDOWN:
+			if event.button == 1:          
+				mouseDragging = True
+
+		if event.type == pygame.MOUSEBUTTONUP:
+			if event.button == 1:            
+				mouseDragging = False
+
+		if event.type == pygame.MOUSEMOTION:
+			if mouseDragging:
+				mouseX, mouseY = event.pos
 
 	screen.fill((0,0,0))
 
