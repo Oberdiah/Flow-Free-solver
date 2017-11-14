@@ -60,7 +60,7 @@ while done == False:
 			if event.key == pygame.K_s:
 				showSolution = not showSolution
 			if event.key == pygame.K_SPACE:
-				trysolve()
+				Algorithmate.trysolve()
 
 	screen.fill((0,0,0))
 
