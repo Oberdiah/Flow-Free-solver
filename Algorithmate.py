@@ -54,7 +54,7 @@ import Library as l
 #   A A A @ A, All As are heads, except for the second one from the left
 #   A A A A A, only the leftmost and rightmost As are heads
 #A 'starting head' is a node that is an endpoint of a path P such that P is in
-#	the set of paths that solve the puzzle.
+#	the set of paths that solve the puzz
 #A 'wall' is either a node on a path that is not a head, or it is part of the
 #	border of the grid.
 #A 'square' is any set of 4 nodes with a common vertex, all belonging
@@ -126,13 +126,3 @@ def trytrivials(grid):
 				direc = adjacents[0][1]
 				l.addDirection(tile,direc)
 				l.addDirection(adjacents[0][0],l.getOpposite(direc))
-
-"""
-def addDirection(tile,direc):
-	if tile.directions[0]==c.D.u:
-		tile.directions[0]=direc
-	elif tile.directions[1]==c.D.u:
-		tile.directions[1]=direc
-	else:
-		assert "Error: tile already going EVERYWHERE!  SPLAT."
-"""
