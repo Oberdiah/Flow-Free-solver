@@ -38,6 +38,7 @@ import Library as l
 #the sets of invalid solutions to both is equivalent, and thus the set of valid
 #solutions is equivalent.
 
+
 #Some definitions (only applies to proofs and may not reflect variable names
 #	in the code):
 #
@@ -87,6 +88,7 @@ def trytrivials(grid):
 	#			the condition of topological equivalency to a line
 
 	#Trivial 1
+	#			Runtime: O(n^2)
 	for row in grid:
 		for tile in row:
 			if not tile.isNode:
@@ -109,6 +111,7 @@ def trytrivials(grid):
 					assert "Error: tile already going EVERYWHERE!  SPLAT."
 
 	#Trivial 2
+	#			Runtime: O(n^2)
 	for row in grid:
 		for tile in row:
 			if not tile.isNode:
