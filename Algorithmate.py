@@ -63,15 +63,27 @@ def trysolve():
 
 def trytrivials(grid):
 	#This function attempts trivial solves on the grid.
-	#A trivial solve is the following:
-	#If a head node has 1 adjacency and only 1, it must
-	#pass through there.  This is provable:
-	#Let H be a head node with one adjacency A.  There must be a path P from H
-	#to its corresponding H'.  Let P pass through an adjacency other than A.
-	#Then, there is a contradiction, as there is no such adjacency other than A.
-	#Thus, A is on path P.
+	#A trivial solve is one of the following:
+	#	Trivial 1:
+	#		If a head node has 1 adjacency and only 1, it must
+	#		pass through there.
+	#		Proof:
+	#			Let H be a head node with one adjacency A.  There must be a path P from H
+	#			to its corresponding H'.  Let P pass through an adjacency other than A.
+	#			Then, there is a contradiction, as there is no such adjacency other than A.
+	#			Thus, A is on path P.
+	#
+	#	Trivial 2:
+	#		If 2 same-color heads are adjacent, they must connect
+	#		Proof:
+	#			If they were not to connect, there would have to be some other
+	#			valid path P between them.  However, if that were the case, then
+	#			P would completely enclose some region of the board R, as paths
+	#			are contiguous and the two heads are next two eachother causing
+	#			the ends of the paths to also be adjacent.  Therefore it violates
+	#			the condition of topological equivalency to a line
 
-	#grid = l.cloneGrid(grid)
+	#Trivial 1
 	for row in grid:
 		for tile in row:
 			if not tile.isNode:
@@ -85,6 +97,26 @@ def trytrivials(grid):
 			#if adjacents is only size 1, it only has one possible move:
 			if len(adjacents) == 1:
 				#print("Found goodies")
+				direc = adjacents[0][1]
+				if tile.directions[0]==c.D.u:
+					tile.directions[0]=direc
+				elif tile.directions[1]==c.D.u:
+					tile.directions[1]=direc
+				else:
+					assert "Error: tile already going EVERYWHERE!  SPLAT."
+
+	#Trivial 2
+	for row in grid:
+		for tile in row:
+			if not tile.isNode:
+				continue
+			adjacents = l.getAdjacentsWithDirections(tile)
+			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
+			#get nodes it is adjacent to
+			adjacents = [x for x in adjacents if x[0].isNode]
+			adjacents = [x for x in adjacents if x[0].number==tile.number]
+			#if adjacents is size 1, it is the required move:
+			if len(adjacents)==1:
 				direc = adjacents[0][1]
 				if tile.directions[0]==c.D.u:
 					tile.directions[0]=direc
