@@ -1,5 +1,6 @@
 #performs algorithms
 import Constants as c
+import Library as l
 
 #Definition of Flow:
 #m*n grid of 2L paired nodes ("heads") and m*n-2L empty nodes, with a hole at
@@ -49,4 +50,10 @@ def trytrivials(grid):
 	#to its corresponding H'.  Let P pass through an adjacency other than A.
 	#Then, there is a contradiction, as there is no such adjacency other than A.
 	#Thus, A is on path P.
-	
+
+	grid = l.cloneGrid(grid)
+	for row in grid:
+		for tile in grid:
+			adjacents = [getNextTo(grid,grid.x,grid.y+1),getNextTo(grid,grid.x,grid.y-1),getNextTo(grid,grid.x+1,grid.y),getNextTo(grid,grid.x-1,grid.y)]
+			adjacents = [x for x in adjacents if x is not None]#get rid of 'nones'
+			adjacents = [x for x in adjacents if x is ]
