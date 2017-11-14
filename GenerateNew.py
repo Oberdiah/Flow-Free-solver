@@ -28,6 +28,9 @@ def generateNew():
 	c.computerGrid = l.cloneGrid(c.solutionGrid)
 	for tile in l.expandGrid(c.computerGrid):
 		tile.directions = [c.D.u, c.D.u]
+		if not tile.isNode:
+			tile.color = l.randomColor()
+			tile.number = -1
 	c.userGrid = l.cloneGrid(c.computerGrid)
 
 	failureNum = 0
@@ -46,7 +49,10 @@ def mergeNodesNew():
 						l.breakBond(nextTo, ntn1)
 						l.breakBond(nextTo, ntn2)
 						colorList.append(l.randomColor())
-						traceConnectionBack(nextTo, ntn1, len(colorList)-1)
+						for q in l.getAllInPath(ntn1):
+							num = len(colorList)-1
+							q.color = colorList[num]
+							q.number = num
 						ntn1.isNode = True
 						ntn2.isNode = True
 						nextTo.isNode = True
@@ -54,15 +60,6 @@ def mergeNodesNew():
 						nextTo.directions[1] = l.getOpposite(p)
 						nextTo.directions[0] = c.D.u
 						break
-			
-def traceConnectionBack(tileBefore, tile, num):
-	tile.color = colorList[num]
-	tile.number = num
-	if not tile.isNode:
-		newTile = l.getNextTo(tile, *tile.directions[0])
-		if newTile == tileBefore:
-			newTile = l.getNextTo(tile, *tile.directions[1])
-		traceConnectionBack(tile, newTile, num)
 
 def mergeNodes():
 	# Merge all single nodes
