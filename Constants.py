@@ -11,9 +11,9 @@ SNAKEENDCHANCE = 0.2
 # Straightness of lines
 STRAIGHTNESS = GRIDSIZE
 
-grid = []
 userGrid = []
 solutionGrid = []
+computerGrid = []
 
 # Essentially a directions Enum
 class D():
@@ -22,15 +22,6 @@ class D():
 	e = (1,0)
 	w = (-1,0)
 	u = (0,0)
-
-class T():
-	# A direction the user has manually added
-	u = 1
-	# The solved direction
-	s = 2
-	# Current solving direction
-	c = 3
-
 
 allDirections = [D.n, D.s, D.e, D.w]
 

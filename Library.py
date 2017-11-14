@@ -9,13 +9,14 @@ def cloneGrid(grid):
 	for x, col in enumerate(grid):
 		newGrid.append([])
 		for y, tile in enumerate(col):
-			newGrid[x][y] = tile.clone()
+			newGrid[x].append(tile.clone())
+			newGrid[x][y].grid = newGrid
 	return newGrid
 
 # Turns the 2D array into a 1D array for iterating purposes
-def expandGrid():
+def expandGrid(grid):
 	tiles = []
-	for x, col in enumerate(c.grid):
+	for x, col in enumerate(grid):
 		for y, tile in enumerate(col):
 			tiles.append(tile)
 
@@ -31,6 +32,12 @@ def getOpposite(d):
 
 	return map[d]
 
+def hasNoDirection(n1):
+	return (n1.directions[0] == c.D.u and n1.directions[1] == c.D.u)
+
+def hasDirection(n1):
+	return not hasNoDirection(n1)
+
 def getNextTo(tile, x, y):
 	gx = tile.x + x
 	gy = tile.y + y
@@ -38,33 +45,22 @@ def getNextTo(tile, x, y):
 	# Check if we're still on the board
 	if gx >= c.GRIDSIZE or gy >= c.GRIDSIZE or gx < 0 or gy < 0:
 		return None
-
-	return c.grid[gx][gy]
-
-def getDirections(t1, t):
-	map = {
-		c.T.c: t1.computerDirections,
-		c.T.u: t1.userDirections,
-		c.T.s: t1.solvedDirections,
-		}
-	return map[t]
+	
+	return tile.grid[gx][gy]
 
 def randomColor():
 	return (int(random()*255), int(random()*255), int(random()*255))
 
 # Breaks a bond between two adjacent Tiles
-def breakBond(n1, n2, t):
-	n1D = getDirections(n1, t)
-	n2D = getDirections(n2, t)
-	for (i1, d1) in enumerate(n1D):
-		for (i2, d2) in enumerate(n2D):
+def breakBond(n1, n2):
+	for (i1, d1) in enumerate(n1.directions):
+		for (i2, d2) in enumerate(n2.directions):
 			if d1 == getOpposite(d2) and getNextTo(n1, *d1) == n2 and getNextTo(n2, *d2) == n1 :
-				n1D[i1] = n2D[i2] = c.D.u
+				n1.directions[i1] = n2.directions[i2] = c.D.u
 
 # Add a new direction onto a Node
-def addDirection(n1, d1, t):
-	n1D = getDirections(n1, t)
-	for d in n1D:
+def addDirection(n1, d1):
+	for d in n1.directions:
 		if d == c.D.u:
 			d = d1
 			return

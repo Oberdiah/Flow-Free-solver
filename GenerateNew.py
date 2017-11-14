@@ -7,77 +7,83 @@ failureNum = 0
 
 def generateNew():
 	global failureNum
-	for tile in l.expandGrid():
+	for tile in l.expandGrid(c.solutionGrid):
 		tile.resetMe()
 	colorList.clear()
 
 	nodesNumber = 0
-	for tile in l.shuffle(l.expandGrid()):
-		if not tile.isNode and tile.solvedDirections[1] == c.D.u:
+	for tile in l.shuffle(l.expandGrid(c.solutionGrid)):
+		if not tile.isNode and tile.directions[1] == c.D.u:
 			tile.isNode = True
 			colorList.append(l.randomColor())
 			doNodeStuff(tile, c.D.w, len(colorList)-1, 0)
 			# Make sure that all nodes have their first direction as their output
-			tile.solvedDirections[0] = tile.solvedDirections[1]
-			tile.solvedDirections[1] = c.D.u
+			tile.directions[0] = tile.directions[1]
+			tile.directions[1] = c.D.u
 
 	mergeNodes()
 	mergeNodesNew()
 	checkForRedo()
+
+	c.computerGrid = l.cloneGrid(c.solutionGrid)
+	for tile in l.expandGrid(c.computerGrid):
+		tile.directions = [c.D.u, c.D.u]
+	c.userGrid = l.cloneGrid(c.computerGrid)
+
 	failureNum = 0
 
 def mergeNodesNew():
-	for tile in l.expandGrid():
-		if tile.isNode and tile.solvedDirections[0] == c.D.u and tile.solvedDirections[1] == c.D.u:
+	for tile in l.expandGrid(c.solutionGrid):
+		if tile.isNode and l.hasNoDirection(tile):
 			for p in c.allDirections:
 				nextTo = l.getNextTo(tile, *p)
 				if nextTo:
-					ntn1 = l.getNextTo(nextTo, *nextTo.solvedDirections[0])
-					ntn2 = l.getNextTo(nextTo, *nextTo.solvedDirections[1])
+					ntn1 = l.getNextTo(nextTo, *nextTo.directions[0])
+					ntn2 = l.getNextTo(nextTo, *nextTo.directions[1])
 					if not nextTo.isNode and not ntn1.isNode and not ntn2.isNode:
 						nextTo.color = tile.color
 						nextTo.number = tile.number
-						l.breakBond(nextTo, ntn1, c.T.s)
-						l.breakBond(nextTo, ntn2, c.T.s)
+						l.breakBond(nextTo, ntn1)
+						l.breakBond(nextTo, ntn2)
 						colorList.append(l.randomColor())
 						traceConnectionBack(nextTo, ntn1, len(colorList)-1)
 						ntn1.isNode = True
 						ntn2.isNode = True
 						nextTo.isNode = True
-						tile.solvedDirections[0] = p
-						nextTo.solvedDirections[1] = l.getOpposite(p)
-						nextTo.solvedDirections[0] = c.D.u
+						tile.directions[0] = p
+						nextTo.directions[1] = l.getOpposite(p)
+						nextTo.directions[0] = c.D.u
 						break
 			
 def traceConnectionBack(tileBefore, tile, num):
 	tile.color = colorList[num]
 	tile.number = num
 	if not tile.isNode:
-		newTile = l.getNextTo(tile, *tile.solvedDirections[0])
+		newTile = l.getNextTo(tile, *tile.directions[0])
 		if newTile == tileBefore:
-			newTile = l.getNextTo(tile, *tile.solvedDirections[1])
+			newTile = l.getNextTo(tile, *tile.directions[1])
 		traceConnectionBack(tile, newTile, num)
 
 def mergeNodes():
 	# Merge all single nodes
-	for tile in l.expandGrid():
-		if tile.isNode and tile.solvedDirections[0] == c.D.u and tile.solvedDirections[1] == c.D.u:
+	for tile in l.expandGrid(c.solutionGrid):
+		if tile.isNode and tile.directions[0] == c.D.u and tile.directions[1] == c.D.u:
 			for p in c.allDirections:
 				nextTo = l.getNextTo(tile, *p)
 				if nextTo and nextTo.isNode and validExtension(nextTo, tile):
 					tile.color = nextTo.color
 					tile.number = nextTo.number
-					if nextTo.solvedDirections[0] != c.D.u or nextTo.solvedDirections[1] != c.D.u:
+					if nextTo.directions[0] != c.D.u or nextTo.directions[1] != c.D.u:
 						nextTo.isNode = False
-					tile.solvedDirections[0] = p
-					nextTo.solvedDirections[1] = l.getOpposite(p)
+					tile.directions[0] = p
+					nextTo.directions[1] = l.getOpposite(p)
 					break
 
 
 def checkForRedo():
 	global failureNum
-	for tile in l.expandGrid():
-		if tile.isNode and tile.solvedDirections[0] == c.D.u and tile.solvedDirections[1] == c.D.u:
+	for tile in l.expandGrid(c.solutionGrid):
+		if tile.isNode and tile.directions[0] == c.D.u and tile.directions[1] == c.D.u:
 			failureNum += 1
 			print("Single found at {}, {}. Regenerating map. This is attempt {}".format(tile.x, tile.y, failureNum))
 			generateNew()
@@ -107,8 +113,8 @@ def doNodeStuff(me, dIn, color, length):
 		if not validExtension(me, going):
 			continue
 
-		me.solvedDirections[1] = d
-		going.solvedDirections[0] = l.getOpposite(d)
+		me.directions[1] = d
+		going.directions[0] = l.getOpposite(d)
 		doNodeStuff(going, d, color, length+1)
 
 		return
@@ -120,7 +126,7 @@ def validExtension(head, going):
 		return False
 
 	# Check if we've been there before
-	if going.solvedDirections[0] != c.D.u or going.solvedDirections[1] != c.D.u:
+	if l.hasDirection(going):
 		return False
 
 	# Check if we're making squares
