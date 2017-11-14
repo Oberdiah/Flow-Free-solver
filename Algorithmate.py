@@ -54,6 +54,18 @@ def trytrivials(grid):
 	grid = l.cloneGrid(grid)
 	for row in grid:
 		for tile in grid:
-			adjacents = [getNextTo(grid,grid.x,grid.y+1),getNextTo(grid,grid.x,grid.y-1),getNextTo(grid,grid.x+1,grid.y),getNextTo(grid,grid.x-1,grid.y)]
-			adjacents = [x for x in adjacents if x is not None]#get rid of 'nones'
-			#adjacents = [x for x in adjacents if x is not ]
+			adjacents = [[getNextTo(grid,grid.x,grid.y+1),c.D.n],[getNextTo(grid,grid.x,grid.y-1),c.D.s],[getNextTo(grid,grid.x+1,grid.y),c.D.e],[getNextTo(grid,grid.x-1,grid.y),c.D.w]]
+			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
+			#if a tile has at least one unknown direction, it is not a wall (assuming it is not a head)
+			adjacents = [x for x in adjacents if x[0].computerDirections[0] is c.D.u or x[0].computerDirections[1] is c.D.u]
+			#if x is head and it has one known direction, it is a wall
+			adjacents = [x for x in adjacents if not (x[0].isNode and (x[0].computerDirections[0] is not c.D.u or x[0].computerDirections[1] is not c.D.u))]
+			#if adjacents is only size 1, it only has one possible move:
+			if len(adjacents) == 1:
+				direc = adjacents[0][1]
+				if tile.computerDirections[0]==c.D.u:
+					tile.computerDirections[0]=direc
+				elif tile.computerDirections[1]==c.D.u:
+					tile.computerDirections[1]=direc
+				else:
+					assert "Error tile already going EVERYWHERE!  SPLAT."
