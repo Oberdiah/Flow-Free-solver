@@ -56,4 +56,4 @@ def trytrivials(grid):
 		for tile in grid:
 			adjacents = [getNextTo(grid,grid.x,grid.y+1),getNextTo(grid,grid.x,grid.y-1),getNextTo(grid,grid.x+1,grid.y),getNextTo(grid,grid.x-1,grid.y)]
 			adjacents = [x for x in adjacents if x is not None]#get rid of 'nones'
-			adjacents = [x for x in adjacents if x is ]
+			#adjacents = [x for x in adjacents if x is not ]
