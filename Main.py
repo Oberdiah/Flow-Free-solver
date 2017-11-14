@@ -18,22 +18,19 @@ class Tile():
 		self.y = y
 		# If it is a node then only the first direction is ever used
 		self.isNode = False
-		self.color = l.randomColor()
 		# The number is always unique, whereas the color has a very small chance of being duplicated
-		self.number = -1
+		self.number = 0
 		self.directions = [c.D.u, c.D.u]
 		self.grid = []
 
 	def resetMe(self):
 		self.isNode = False
-		self.color = l.randomColor()
-		self.number = -1
+		self.number = 0
 		self.directions = [c.D.u, c.D.u]
 
 	def clone(self):
 		toReturn = Tile(self.x, self.y)
 		toReturn.isNode = self.isNode
-		toReturn.color = self.color
 		toReturn.number = self.number
 		toReturn.grid = self.grid
 		for i in range(2):
@@ -52,6 +49,7 @@ showSolution = False
 showComputer = False
 
 mouseDragging = False
+currentMouseBox = [0,0]
 
 def testingFunc():
 	#fixSquares()
@@ -83,6 +81,8 @@ while done == False:
 		if event.type == pygame.MOUSEBUTTONDOWN:
 			if event.button == 1:          
 				mouseDragging = True
+				mouseX, mouseY = event.pos
+				currentMouseBox = [mouseX//c.BOXSIZE, mouseY//c.BOXSIZE]
 
 		if event.type == pygame.MOUSEBUTTONUP:
 			if event.button == 1:            
@@ -91,6 +91,16 @@ while done == False:
 		if event.type == pygame.MOUSEMOTION:
 			if mouseDragging:
 				mouseX, mouseY = event.pos
+				newMouseBox = [mouseX//c.BOXSIZE, mouseY//c.BOXSIZE]
+				if currentMouseBox != newMouseBox:
+					n1 = c.userGrid[currentMouseBox[0]][currentMouseBox[1]]
+					n2 = c.userGrid[newMouseBox[0]][newMouseBox[1]]
+					n2.directions = [c.D.u, c.D.u]
+					l.createBond(n1,n2)
+					n2.number = n1.number
+
+				currentMouseBox = newMouseBox
+
 
 	screen.fill((0,0,0))
 
@@ -105,21 +115,22 @@ while done == False:
 		for y, tile in enumerate(col):
 			s = c.BOXSIZE
 			gt = c.GRIDTHICKNESS
+			color = GenerateNew.colorList[tile.number]
 			center = (int((x+0.5)*s), int((y+0.5)*s))
 			pygame.draw.rect(screen, (255,255,255), (x*s+(gt/2), y*s+(gt/2), s-gt, s-gt))
 
 			if l.hasDirection(tile):
-				pygame.draw.circle(screen, tile.color, center, int(s/8))
+				pygame.draw.circle(screen, color, center, int(s/8))
 
 				for i in range(2):
 					directionBias = (tile.directions[i][0]/2, tile.directions[i][1]/2)
 					loc = ((x+0.5+directionBias[0])*s, (y+0.5+directionBias[1])*s)
 
-					pygame.draw.line(screen, tile.color, loc, center, int(s/4))
+					pygame.draw.line(screen, color, loc, center, int(s/4))
 
 			if tile.isNode:
 				rad = int(s/3)
-				pygame.draw.circle(screen, tile.color, center, rad)
+				pygame.draw.circle(screen, color, center, rad)
 				text = myfont.render(str(tile.number+1), 1, (0,0,0))
 				rect = text.get_rect()
 				screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))

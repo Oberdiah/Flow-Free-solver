@@ -25,8 +25,7 @@ def generateNew():
 	for tile in l.expandGrid(c.computerGrid):
 		tile.directions = [c.D.u, c.D.u]
 		if not tile.isNode:
-			tile.color = l.randomColor()
-			tile.number = -1
+			tile.number = 0
 	c.userGrid = l.cloneGrid(c.computerGrid)
 
 	failureNum = 0
@@ -49,7 +48,6 @@ def mergePaths():
 						tile.isNode = False
 						l.createBond(nextTo, tile)
 						for p in fullPath:
-							p.color = tile.color
 							p.number = tile.number
 						break
 							
@@ -81,14 +79,12 @@ def mergeNodesNew():
 					ntn1 = l.getNextTo(nextTo, *nextTo.directions[0])
 					ntn2 = l.getNextTo(nextTo, *nextTo.directions[1])
 					if not nextTo.isNode and not ntn1.isNode and not ntn2.isNode:
-						nextTo.color = tile.color
 						nextTo.number = tile.number
 						l.breakBond(nextTo, ntn1)
 						l.breakBond(nextTo, ntn2)
 						colorList.append(l.randomColor())
 						for q in l.getAllInPath(ntn1):
 							num = len(colorList)-1
-							q.color = colorList[num]
 							q.number = num
 						ntn1.isNode = True
 						ntn2.isNode = True
@@ -105,7 +101,6 @@ def mergeNodes():
 			for p in c.allDirections:
 				nextTo = l.getNextTo(tile, *p)
 				if nextTo and nextTo.isNode and validExtension(nextTo, tile):
-					tile.color = nextTo.color
 					tile.number = nextTo.number
 					if nextTo.directions[0] != c.D.u or nextTo.directions[1] != c.D.u:
 						nextTo.isNode = False
@@ -124,12 +119,11 @@ def checkForRedo():
 			break
 
 
-def doNodeStuff(me, dIn, color, length):
+def doNodeStuff(me, dIn, number, length):
 	x = me.x
 	y = me.y
 
-	me.color = colorList[color]
-	me.number = color
+	me.number = number
 
 	if random() < c.SNAKEENDCHANCE and length > c.MINIMUMSNAKELENGTH:
 		me.isNode = True
@@ -149,7 +143,7 @@ def doNodeStuff(me, dIn, color, length):
 
 		me.directions[1] = d
 		going.directions[0] = l.getOpposite(d)
-		doNodeStuff(going, d, color, length+1)
+		doNodeStuff(going, d, number, length+1)
 
 		return
 
