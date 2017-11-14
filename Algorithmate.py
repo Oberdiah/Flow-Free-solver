@@ -51,6 +51,7 @@ import Library as l
 #   A A @ @ A, All 3 As are heads
 #   A A A @ A, All As are heads, but the second one from the left
 #   A A A A A, only the leftmost and rightmost As are heads
+#A 'wall' is a node on a path that is not a head.
 #A 'square' is any set of 4 nodes with a common vertex all belonging
 #to the same path
 #A 'loop' is [insert a rigorous definition here]
