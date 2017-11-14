@@ -18,10 +18,11 @@ import Library as l
 #	2: Every node belongs to exactly 1 path
 #	3: There is no vertex such that all adjacent nodes belong to the same path
 #			(AKA no squares)
-#	4: No path forms a closed loop
-#
-#The first definition is preferred as it is mathematically rigorous
-#whereas the second definition contains an ambiguous term 'loop'
+#	4: There is no path P which contains a node N such that N is
+#			adjacent to another node on P but neither directly before
+#			or after it on the sequence of nodes in P
+#			(AKA no loops)
+#The first definition is preferred as it is simpler to state mathematically
 #However, the second definition is easier to understand.
 #
 #The two definitions are provably equivalent:
@@ -53,9 +54,11 @@ import Library as l
 #   A A A A A, only the leftmost and rightmost As are heads
 #A 'wall' is either a node on a path that is not a head, or it is part of the
 #	border of the grid.
-#A 'square' is any set of 4 nodes with a common vertex all belonging
-#to the same path
-#A 'loop' is [insert a rigorous definition here]
+#A 'square' is any set of 4 nodes with a common vertex, all belonging
+#	to the same path
+#A path has a 'loop' if for any node on the path, it is adjacent to
+#	another node on the same path, but neither of the nodes follow immediately
+#	after the other.
 
 def trysolve():
 	#print(c.grid)
