@@ -36,8 +36,11 @@ def mergeNodesNew():
 					ntn2 = l.getNextTo(nextTo, *nextTo.solvedDirections[1])
 					if not nextTo.isNode and not ntn1.isNode and not ntn2.isNode:
 						nextTo.color = tile.color
+						nextTo.number = tile.number
 						l.breakBond(nextTo, ntn1, c.T.s)
 						l.breakBond(nextTo, ntn2, c.T.s)
+						colorList.append(l.randomColor())
+						traceConnectionBack(nextTo, ntn1, len(colorList)-1)
 						ntn1.isNode = True
 						ntn2.isNode = True
 						nextTo.isNode = True
@@ -46,6 +49,15 @@ def mergeNodesNew():
 						nextTo.solvedDirections[0] = c.D.u
 						break
 			
+def traceConnectionBack(tileBefore, tile, num):
+	tile.color = colorList[num]
+	tile.number = num
+	if not tile.isNode:
+		newTile = l.getNextTo(tile, *tile.solvedDirections[0])
+		if newTile == tileBefore:
+			newTile = l.getNextTo(tile, *tile.solvedDirections[1])
+		traceConnectionBack(tile, newTile, num)
+
 def mergeNodes():
 	# Merge all single nodes
 	for tile in l.expandGrid():
@@ -54,6 +66,7 @@ def mergeNodes():
 				nextTo = l.getNextTo(tile, *p)
 				if nextTo and nextTo.isNode and validExtension(nextTo, tile):
 					tile.color = nextTo.color
+					tile.number = nextTo.number
 					if nextTo.solvedDirections[0] != c.D.u or nextTo.solvedDirections[1] != c.D.u:
 						nextTo.isNode = False
 					tile.solvedDirections[0] = p

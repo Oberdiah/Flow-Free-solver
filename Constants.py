@@ -1,5 +1,5 @@
 # Size of overall grid (In boxes)
-GRIDSIZE = 10
+GRIDSIZE = 20
 # Size of boxes (In pixels) (Must be even)
 BOXSIZE = 1000//GRIDSIZE
 # Grid thickness (Must be even)
@@ -12,7 +12,7 @@ SNAKEENDCHANCE = 0.2
 STRAIGHTNESS = GRIDSIZE
 
 grid = []
-emptyGrid = []
+userGrid = []
 solutionGrid = []
 
 # Essentially a directions Enum
