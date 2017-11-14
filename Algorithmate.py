@@ -39,7 +39,7 @@ import Library as l
 
 def trysolve():
 	#print(c.grid)
-	c.grid = trytrivials(c.grid)
+	trytrivials(c.grid)
 
 def trytrivials(grid):
 	#This function attempts trivial solves on the grid.
@@ -51,10 +51,10 @@ def trytrivials(grid):
 	#Then, there is a contradiction, as there is no such adjacency other than A.
 	#Thus, A is on path P.
 
-	grid = l.cloneGrid(grid)
+	#grid = l.cloneGrid(grid)
 	for row in grid:
-		for tile in grid:
-			adjacents = [[getNextTo(grid,grid.x,grid.y+1),c.D.n],[getNextTo(grid,grid.x,grid.y-1),c.D.s],[getNextTo(grid,grid.x+1,grid.y),c.D.e],[getNextTo(grid,grid.x-1,grid.y),c.D.w]]
+		for tile in row:
+			adjacents = [[l.getNextTo(grid,tile.x,tile.y+1),c.D.n],[l.getNextTo(grid,tile.x,tile.y-1),c.D.s],[l.getNextTo(grid,tile.x+1,tile.y),c.D.e],[l.getNextTo(grid,tile.x-1,tile.y),c.D.w]]
 			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
 			#if a tile has at least one unknown direction, it is not a wall (assuming it is not a head)
 			adjacents = [x for x in adjacents if x[0].computerDirections[0] is c.D.u or x[0].computerDirections[1] is c.D.u]
