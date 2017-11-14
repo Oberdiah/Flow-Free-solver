@@ -21,21 +21,26 @@ class Tile():
 		self.color = l.randomColor()
 		# Should only be used for printing
 		self.number = -1
-		self.directions = [c.D.u, c.D.u]
+		self.solvedDirections = [c.D.u, c.D.u]
+		self.userDirections = [c.D.u, c.D.u]
+		self.computerDirections = [c.D.u, c.D.u]
 
 	def resetMe(self):
 		self.isNode = False
 		self.color = l.randomColor()
 		self.number = -1
-		self.directions = [c.D.u, c.D.u]
+		self.solvedDirections = [c.D.u, c.D.u]
 		self.userDirections = [c.D.u, c.D.u]
+		self.computerDirections = [c.D.u, c.D.u]
 
 	def clone(self):
 		toReturn = Tile(self.x, self.y)
 		toReturn.isNode = self.isNode
 		toReturn.color = self.color
 		for i in range(2):
-			toReturn.directions[i] = self.directions[i]
+			toReturn.solvedDirections[i] = self.solvedDirections[i]
+			toReturn.userDirections[i] = self.userDirections[i]
+			toReturn.computerDirections[i] = self.computerDirections[i]
 		return toReturn
 
 c.grid = [[Tile(x, y) for y in range(c.GRIDSIZE)] for x in range(c.GRIDSIZE)]
@@ -72,7 +77,7 @@ while done == False:
 			pygame.draw.rect(screen, (255,255,255), (x*s+(gt/2), y*s+(gt/2), s-gt, s-gt))
 
 			if showSolution:
-				directions = tile.directions
+				directions = tile.solvedDirections
 			else:
 				directions = tile.userDirections
 
