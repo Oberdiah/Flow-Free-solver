@@ -39,7 +39,7 @@ import Library as l
 
 def trysolve():
 	#print(c.grid)
-	trytrivials(c.grid)
+	trytrivials(c.computerGrid)
 
 def trytrivials(grid):
 	#This function attempts trivial solves on the grid.
@@ -54,18 +54,18 @@ def trytrivials(grid):
 	#grid = l.cloneGrid(grid)
 	for row in grid:
 		for tile in row:
-			adjacents = [[l.getNextTo(grid,tile.x,tile.y+1),c.D.n],[l.getNextTo(grid,tile.x,tile.y-1),c.D.s],[l.getNextTo(grid,tile.x+1,tile.y),c.D.e],[l.getNextTo(grid,tile.x-1,tile.y),c.D.w]]
+			adjacents = [[l.getNextTo(tile,0,1),c.D.n],[l.getNextTo(tile,0,-1),c.D.s],[l.getNextTo(tile,1,0),c.D.e],[l.getNextTo(tile,-1,0),c.D.w]]
 			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
 			#if a tile has at least one unknown direction, it is not a wall (assuming it is not a head)
-			adjacents = [x for x in adjacents if x[0].computerDirections[0] is c.D.u or x[0].computerDirections[1] is c.D.u]
+			adjacents = [x for x in adjacents if x[0].directions[0] is c.D.u or x[0].directions[1] is c.D.u]
 			#if x is head and it has one known direction, it is a wall
-			adjacents = [x for x in adjacents if not (x[0].isNode and (x[0].computerDirections[0] is not c.D.u or x[0].computerDirections[1] is not c.D.u))]
+			adjacents = [x for x in adjacents if not (x[0].isNode and (x[0].directions[0] is not c.D.u or x[0].directions[1] is not c.D.u))]
 			#if adjacents is only size 1, it only has one possible move:
 			if len(adjacents) == 1:
 				direc = adjacents[0][1]
-				if tile.computerDirections[0]==c.D.u:
-					tile.computerDirections[0]=direc
-				elif tile.computerDirections[1]==c.D.u:
-					tile.computerDirections[1]=direc
+				if tile.directions[0]==c.D.u:
+					tile.directions[0]=direc
+				elif tile.directions[1]==c.D.u:
+					tile.directions[1]=direc
 				else:
 					assert "Error tile already going EVERYWHERE!  SPLAT."
