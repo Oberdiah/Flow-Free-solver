@@ -53,6 +53,8 @@ import Library as l
 #   A A @ @ A, All 3 As are heads
 #   A A A @ A, All As are heads, except for the second one from the left
 #   A A A A A, only the leftmost and rightmost As are heads
+#A 'starting head' is a node that is an endpoint of a path P such that P is in
+#	the set of paths that solve the puzzle.
 #A 'wall' is either a node on a path that is not a head, or it is part of the
 #	border of the grid.
 #A 'square' is any set of 4 nodes with a common vertex, all belonging
@@ -97,8 +99,8 @@ def trytrivials(grid):
 			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
 			#if a tile has at least one unknown direction, it is not an invalid move (assuming it is not a head)
 			adjacents = [x for x in adjacents if x[0].directions[0] is c.D.u or x[0].directions[1] is c.D.u]
-			#if x is head and it has one known direction, it is an invalid move
-			adjacents = [x for x in adjacents if not (l.isHead(x[0]) and not l.hasDirection(x[0]) and not x[0].number==tile.number)]
+			#if x is a starting head and it has one known direction, it is an invalid move
+			adjacents = [x for x in adjacents if not (x[0].isNode and not l.hasDirection(x[0]) and not x[0].number==tile.number)]
 			#if adjacents is only size 1, it only has one possible move:
 			if len(adjacents) == 1:
 				direc = adjacents[0][1]
