@@ -1,15 +1,15 @@
 # Size of overall grid (In boxes)
-GRIDSIZE = 20
+GRIDSIZE = 50
 # Size of boxes (In pixels) (Must be even)
-BOXSIZE = 40
+BOXSIZE = 20
 # Grid thickness (Must be even)
 GRIDTHICKNESS = 2
 # The minimum snake length
-MINIMUMSNAKELENGTH = 20
+MINIMUMSNAKELENGTH = 100
 # Chance for a snake to end every new piece after MINSNAKELENGTH:
 SNAKEENDCHANCE = 0.2
 # Straightness of lines
-STRAIGHTNESS = 50
+STRAIGHTNESS = 2
 
 grid = []
 

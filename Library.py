@@ -17,7 +17,7 @@ def getOpposite(d):
 			c.D.w: c.D.e,
 			c.D.s: c.D.n,
 			c.D.n: c.D.s,
-			#D.u: D.u
+			c.D.u: c.D.u
 		   }
 
 	return map[d]

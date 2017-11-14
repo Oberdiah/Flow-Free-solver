@@ -23,6 +23,9 @@ c.grid = [[Tile(x, y) for y in range(c.GRIDSIZE)] for x in range(c.GRIDSIZE)]
 
 generateNew()
 
+def testingFunc():
+	pass
+
 done = False
 while done == False:
 	for event in pygame.event.get():
@@ -30,7 +33,7 @@ while done == False:
 			done = True
 		if event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_LEFT:
-				pass
+				testingFunc()
 
 	screen.fill((0,0,0))
 	
