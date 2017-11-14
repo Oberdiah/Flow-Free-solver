@@ -74,6 +74,8 @@ def trytrivials(grid):
 	#grid = l.cloneGrid(grid)
 	for row in grid:
 		for tile in row:
+			if not tile.isNode:
+				continue
 			adjacents = l.getAdjacentsWithDirections(tile)
 			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
 			#if a tile has at least one unknown direction, it is not an invalid move (assuming it is not a head)
