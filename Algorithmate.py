@@ -91,7 +91,7 @@ def trytrivials(grid):
 	#			Runtime: O(n^2)
 	for row in grid:
 		for tile in row:
-			if not isHead(tile):
+			if not l.isHead(tile):
 				continue
 			adjacents = l.getAdjacentsWithDirections(tile)
 			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
@@ -102,8 +102,8 @@ def trytrivials(grid):
 			#if adjacents is only size 1, it only has one possible move:
 			if len(adjacents) == 1:
 				direc = adjacents[0][1]
-				addDirection(tile,direc)
-				addDirection(adjacents[0][0],l.getOpposite(direc))
+				l.addDirection(tile,direc)
+				l.addDirection(adjacents[0][0],l.getOpposite(direc))
 				adjacents[0][0].color = tile.color
 				adjacents[0][0].number = tile.number
 
@@ -112,7 +112,7 @@ def trytrivials(grid):
 	#			Runtime: O(n^2)
 	for row in grid:
 		for tile in row:
-			if not isHead(tile):
+			if not l.isHead(tile):
 				continue
 			adjacents = l.getAdjacentsWithDirections(tile)
 			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
@@ -122,10 +122,10 @@ def trytrivials(grid):
 			#if adjacents is size 1, it is the required move:
 			if len(adjacents)==1:
 				direc = adjacents[0][1]
-				addDirection(tile,direc)
-				addDirection(adjacents[0][0],l.getOpposite(direc))
+				l.addDirection(tile,direc)
+				l.addDirection(adjacents[0][0],l.getOpposite(direc))
 
-
+"""
 def addDirection(tile,direc):
 	if tile.directions[0]==c.D.u:
 		tile.directions[0]=direc
@@ -133,13 +133,4 @@ def addDirection(tile,direc):
 		tile.directions[1]=direc
 	else:
 		assert "Error: tile already going EVERYWHERE!  SPLAT."
-
-def hasSingleDirection(tile):
-	return (tile.directions[0]==c.D.u and tile.directions[1]!=c.D.u) or (tile.directions[0]!=c.D.u and tile.directions[1]==c.D.u)
-
-def isHead(tile):
-	if (tile.isNode and l.hasNoDirection(tile)):
-		return True
-	elif (not tile.isNode and hasSingleDirection(tile)):
-		return True
-	return False
+"""

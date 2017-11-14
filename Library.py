@@ -118,3 +118,13 @@ def addDirection(n1, d1):
 			return
 
 	assert False, "There was no free direction to add"
+
+def hasSingleDirection(tile):
+	return (tile.directions[0]==c.D.u and tile.directions[1]!=c.D.u) or (tile.directions[0]!=c.D.u and tile.directions[1]==c.D.u)
+
+def isHead(tile):
+	if (tile.isNode and hasNoDirection(tile)):
+		return True
+	elif (not tile.isNode and hasSingleDirection(tile)):
+		return True
+	return False
