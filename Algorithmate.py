@@ -77,7 +77,7 @@ def trytrivials(grid):
 			adjacents = l.getAdjacentsWithDirections(tile)
 			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
 			#if a tile has at least one unknown direction, it is not an invalid move (assuming it is not a head)
-			adjacents = [x for x in adjacents if not l.hasDirection(x[0])]
+			adjacents = [x for x in adjacents if x[0].directions[0] is c.D.u or x[0].directions[1] is c.D.u]
 			#if x is head and it has one known direction, it is an invalid move
 			adjacents = [x for x in adjacents if not (x[0].isNode and (x[0].directions[0] is not c.D.u or x[0].directions[1] is not c.D.u))]
 			#if adjacents is only size 1, it only has one possible move:
