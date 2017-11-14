@@ -91,7 +91,7 @@ def trytrivials(grid):
 	#			Runtime: O(n^2)
 	for row in grid:
 		for tile in row:
-			if not tile.isNode:
+			if not isHead(tile):
 				continue
 			adjacents = l.getAdjacentsWithDirections(tile)
 			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
@@ -114,7 +114,7 @@ def trytrivials(grid):
 	#			Runtime: O(n^2)
 	for row in grid:
 		for tile in row:
-			if not tile.isNode:
+			if not isHead(tile):
 				continue
 			adjacents = l.getAdjacentsWithDirections(tile)
 			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
@@ -130,3 +130,13 @@ def trytrivials(grid):
 					tile.directions[1]=direc
 				else:
 					assert "Error: tile already going EVERYWHERE!  SPLAT."
+
+def hasSingleDirection(tile):
+	return (tile.directions[0]==c.D.u and tile.directions[1]!=c.D.u) or (tile.directions[0]!=c.D.u and tile.directions[1]==c.D.u)
+
+def isHead(tile):
+	if (tile.isNode and l.hasNoDirection(tile)):
+		return True
+	elif (not tile.isNode and hasSingleDirection(tile)):
+		return True
+	return False
