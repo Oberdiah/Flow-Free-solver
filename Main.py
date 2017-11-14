@@ -19,7 +19,8 @@ class Tile():
 		# If it is a node then only the first direction is ever used
 		self.isNode = False
 		self.color = l.randomColor()
-		# Should only be used for printing
+		
+		# The number is always unique, whereas the color has a very small chance of being duplicated
 		self.number = -1
 		self.solvedDirections = [c.D.u, c.D.u]
 		self.userDirections = [c.D.u, c.D.u]
