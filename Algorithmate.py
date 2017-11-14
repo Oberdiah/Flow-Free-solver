@@ -6,7 +6,7 @@ import Library as l
 #m*n grid of 2L paired nodes ("heads") and m*n-2L empty nodes, with a hole at
 #every vertex.
 #A solution of Flow is a set of paths between paired nodes such that:
-#	1: No paths cross
+#	1: No paths cross eachother or themselves
 #	2: Every node belongs to exactly 1 path
 #	3: Every path is topologically equivalent to a line
 #
@@ -14,7 +14,7 @@ import Library as l
 #
 #m*n grid of 2L paired nodes ("heads") and m*n-2L empty nodes.
 #A solution of Flow is a set of paths between paired nodes such that:
-#	1: No paths cross
+#	1: No paths cross eachother or themselves
 #	2: Every node belongs to exactly 1 path
 #	3: There is no vertex such that all adjacent nodes belong to the same path
 #			(AKA no squares)
@@ -45,7 +45,7 @@ import Library as l
 #A 'grid' is the board that Flow is played on
 #A 'node' is a tile on the grid
 #A 'path' is an ordered set of nodes such that no two nodes adjacent in the path
-#	are non-adjacent on the grid.
+#	are non-adjacent on the grid and there are no repeats.
 #A 'head' is a node on the end of a path
 #	Note that whether a node is or isn't a head can change, depending on how much
 #	the player knows about the board:
