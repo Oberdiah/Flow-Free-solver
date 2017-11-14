@@ -10,19 +10,11 @@ def generateNew():
 	for tile in l.expandGrid(c.solutionGrid):
 		tile.resetMe()
 	colorList.clear()
-
-	nodesNumber = 0
-	for tile in l.shuffle(l.expandGrid(c.solutionGrid)):
-		if not tile.isNode and tile.directions[1] == c.D.u:
-			tile.isNode = True
-			colorList.append(l.randomColor())
-			doNodeStuff(tile, c.D.w, len(colorList)-1, 0)
-			# Make sure that all nodes have their first direction as their output
-			tile.directions[0] = tile.directions[1]
-			tile.directions[1] = c.D.u
-
+	
+	createPaths()
 	mergeNodes()
 	mergeNodesNew()
+	mergePaths()
 	checkForRedo()
 
 	c.computerGrid = l.cloneGrid(c.solutionGrid)
@@ -34,6 +26,47 @@ def generateNew():
 	c.userGrid = l.cloneGrid(c.computerGrid)
 
 	failureNum = 0
+
+def mergePaths():
+	for tile in l.expandGrid(c.solutionGrid):
+		if tile.isNode:
+			for d in c.allDirections:
+				nextTo = l.getNextTo(tile, *d)
+				if nextTo and nextTo.isNode and nextTo.number != tile.number:
+					goodToGo = True
+					fullPath = l.getAllInPath(nextTo)
+					for p in fullPath:
+						numNear = numberNear(p, nextTo.number) + numberNear(p, tile.number)
+						if numNear > 2:
+							goodToGo = False
+
+					if goodToGo:
+						nextTo.isNode = False
+						tile.isNode = False
+						l.createBond(nextTo, tile)
+						for p in fullPath:
+							p.color = tile.color
+							p.number = tile.number
+						break
+							
+def numberNear(tile, number):
+	numNear = 0
+	for q in c.all3x3Directions:
+		nextTo = l.getNextTo(tile, *q)
+		if nextTo and nextTo.number == number:
+			numNear += 1
+	return numNear
+
+def createPaths():
+	nodesNumber = 0
+	for tile in l.shuffle(l.expandGrid(c.solutionGrid)):
+		if not tile.isNode and tile.directions[1] == c.D.u:
+			tile.isNode = True
+			colorList.append(l.randomColor())
+			doNodeStuff(tile, c.D.w, len(colorList)-1, 0)
+			# Make sure that all nodes have their first direction as their output
+			tile.directions[0] = tile.directions[1]
+			tile.directions[1] = c.D.u
 
 def mergeNodesNew():
 	for tile in l.expandGrid(c.solutionGrid):
@@ -126,13 +159,7 @@ def validExtension(head, going):
 	if l.hasDirection(going):
 		return False
 
-	# Check if we're making squares
-	numNear = 0
-	for p in c.all3x3Directions:
-		nextTo = l.getNextTo(going, *p)
-		if nextTo and nextTo.color == head.color:
-			numNear += 1
-	if numNear > 2:
+	if not l.isColorValid(going, head.number):
 		return False
 
 	return True

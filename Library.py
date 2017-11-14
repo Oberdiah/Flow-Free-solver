@@ -78,6 +78,18 @@ def getNextTo(tile, dx, dy):
 def randomColor():
 	return (int(random()*255), int(random()*255), int(random()*255))
 
+def isColorValid(tile, number):
+	# Check if we're making squares
+	numNear = 0
+	for p in c.all3x3Directions:
+		nextTo = getNextTo(tile, *p)
+		if nextTo and nextTo.number == number:
+			numNear += 1
+
+	if numNear > 2:
+		return False
+	return True
+
 # Breaks a bond between two adjacent Tiles
 def breakBond(n1, n2):
 	for (i1, d1) in enumerate(n1.directions):
@@ -85,11 +97,24 @@ def breakBond(n1, n2):
 			if d1 == getOpposite(d2) and getNextTo(n1, *d1) == n2 and getNextTo(n2, *d2) == n1 :
 				n1.directions[i1] = n2.directions[i2] = c.D.u
 
+def createBond(n1, n2):
+	addDirection(n1, getDirectionFromTo(n1,n2))
+	addDirection(n2, getDirectionFromTo(n2,n1))
+
+def getDirectionFromTo(n1, n2):
+	dx = n2.x-n1.x
+	dy = n2.y-n1.y
+	for d in c.allDirections:
+		if d[0] == dx and d[1] == dy:
+			return d
+
+	assert False, "Your 'from' and 'to' were more than one apart from one another!"
+
 # Add a new direction onto a Node
 def addDirection(n1, d1):
-	for d in n1.directions:
+	for i, d in enumerate(n1.directions):
 		if d == c.D.u:
-			d = d1
+			n1.directions[i] = d1
 			return
 
 	assert False, "There was no free direction to add"

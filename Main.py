@@ -90,7 +90,7 @@ while done == False:
 			center = (int((x+0.5)*s), int((y+0.5)*s))
 			pygame.draw.rect(screen, (255,255,255), (x*s+(gt/2), y*s+(gt/2), s-gt, s-gt))
 
-			if tile.directions[0] != c.D.u or tile.directions[1] != c.D.u:
+			if l.hasDirection(tile):
 				pygame.draw.circle(screen, tile.color, center, int(s/8))
 
 				for i in range(2):
