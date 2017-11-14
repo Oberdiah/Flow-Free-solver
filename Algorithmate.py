@@ -51,7 +51,7 @@ import Library as l
 #	the player knows about the board:
 #	A @ @ @ A, As are heads @s are empty
 #   A A @ @ A, All 3 As are heads
-#   A A A @ A, All As are heads, but the second one from the left
+#   A A A @ A, All As are heads, except for the second one from the left
 #   A A A A A, only the leftmost and rightmost As are heads
 #A 'wall' is either a node on a path that is not a head, or it is part of the
 #	border of the grid.
