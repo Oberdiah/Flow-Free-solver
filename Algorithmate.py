@@ -237,7 +237,6 @@ def trytrivials(grid):
 					#and where instead of having 3 same-path nodes the vertex merely had
 					#3 empty nodes.  I actually think having both requirements is
 					#redundant, but just to be safe I'm putting both
-					print([x.number for x in l.getAdjacents(uglyDuckling) if x is not None])
 					uglyDuckling.imaginary = True
 					l.numberOfImaginaryLines+=1
 					uglyDuckling.number = l.numberOfImaginaryLines
