@@ -1,6 +1,8 @@
 import Constants as c
 from random import random, sample
 
+numberOfImaginaryLines = 0
+
 def shuffle(lst):
 	return sample(lst, len(lst))
 

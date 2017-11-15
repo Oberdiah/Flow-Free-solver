@@ -153,3 +153,110 @@ def trytrivials(grid):
 				l.addDirection(tile,direc)
 				l.addDirection(adjacents[0][0],l.getOpposite(direc))
 				adjacents[0][0].number = tile.number
+
+	#Trivial 3
+	#			Runtime: O(n^2)
+	for row in grid:
+		for tile in row:
+			if not l.isEmpty(tile):
+				continue
+			adjacents = l.getAdjacentsWithDirections(tile)
+			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
+			adjacents = [x for x in adjacents if not l.isWall(x[0])]#get rid of 'walls'
+			#if adjacents have size 2, then it is a valid path
+			if len(adjacents)==2:
+				#first check if it should be imaginary or not:
+				#If adjacent to a head, it is not imaginary
+				headsAdjacent = [x for x in adjacents if l.isHead(x[0])]
+				isImaginary = len(headsAdjacent)==0
+				direc = adjacents[0][1]
+				l.addDirection(tile,direc)
+				l.addDirection(adjacents[0][0],l.getOpposite(direc))
+				direc = adjacents[1][1]
+				l.addDirection(tile,direc)
+				l.addDirection(adjacents[1][0],l.getOpposite(direc))
+				if isImaginary:
+					if tile.imaginary:
+						#already an imaginary line
+						adjacents[0][0].number = tile.number
+						adjacents[1][0].number = tile.number
+						adjacents[0][0].imaginary = True
+						adjacents[1][0].imaginary = True
+						direc = adjacents[0][1]
+						l.addDirection(tile,direc)
+						l.addDirection(adjacents[0][0],l.getOpposite(direc))
+						direc = adjacents[1][1]
+						l.addDirection(tile,direc)
+						l.addDirection(adjacents[1][0],l.getOpposite(direc))
+					else:#not imaginary yet
+						l.numberOfImaginaryLines+=1
+						adjacents[0][0].number = l.numberOfImaginaryLines
+						adjacents[1][0].number = l.numberOfImaginaryLines
+						tile.number = l.numberOfImaginaryLines
+						adjacents[0][0].imaginary = True
+						adjacents[1][0].imaginary = True
+						tile.imaginary = True
+						direc = adjacents[0][1]
+						l.addDirection(tile,direc)
+						l.addDirection(adjacents[0][0],l.getOpposite(direc))
+						direc = adjacents[1][1]
+						l.addDirection(tile,direc)
+						l.addDirection(adjacents[1][0],l.getOpposite(direc))
+				elif len(headsAdjacent)==1:#only adjacent to 1 head
+					#if adjacent to singular head, make it part of
+					#that line
+					imaginaryToBe = headsAdjacent[0].imaginary
+					tile.imaginary = imaginaryToBe
+					adjacents[0][0].imaginary = imaginaryToBe
+					adjacents[1][0].imaginary = imaginaryToBe
+					numberToBe = headsAdjacent[0].number
+					tile.number = numberToBe
+					adjacents[0][0].number = numberToBe
+					adjacents[1][0].number = numberToBe
+					direc = adjacents[0][1]
+					l.addDirection(tile,direc)
+					l.addDirection(adjacents[0][0],l.getOpposite(direc))
+					direc = adjacents[1][1]
+					l.addDirection(tile,direc)
+					l.addDirection(adjacents[1][0],l.getOpposite(direc))
+				else:
+					#adjacent to 2 heads aleady.
+					if len([x for x in adjacents if x[0].imaginary])==0:
+						#if neither of them are imaginary:
+						tile.number = adjacents[0][0].number
+						direc = adjacents[0][1]
+						l.addDirection(tile,direc)
+						l.addDirection(adjacents[0][0],l.getOpposite(direc))
+						direc = adjacents[1][1]
+						l.addDirection(tile,direc)
+						l.addDirection(adjacents[1][0],l.getOpposite(direc))
+					elif len([x for x in adjacents if x[0].imaginary])==1:
+						#if one of them is imaginary
+						whichImag = adjacents[0 if adjacents[0][0].imaginary else 1][0]
+						whichReal = adjacents[1 if adjacents[0][0].imaginary else 0][0]
+						whichImage.imaginary = False
+						whichImage.number = whichReal.number
+						tile.number = whichReal.number
+						allInImaginaryPath = getAllInPath(whichImag)
+						for t in allInImaginaryPath:
+							t.number = whichReal.number
+							t.imaginary = False
+						direc = adjacents[0][1]
+						l.addDirection(tile,direc)
+						l.addDirection(adjacents[0][0],l.getOpposite(direc))
+						direc = adjacents[1][1]
+						l.addDirection(tile,direc)
+						l.addDirection(adjacents[1][0],l.getOpposite(direc))
+					else:
+						#both lines are imaginary
+						adjacents[0][0].number = adjacents[1][0].number
+						tile.number = adjacents[1][0].number
+						allInImaginaryPath = getAllInPath(adjacents[0][0])
+						for t in allInImaginaryPath:
+							t.number = adjacents[1][0].number
+						direc = adjacents[0][1]
+						l.addDirection(tile,direc)
+						l.addDirection(adjacents[0][0],l.getOpposite(direc))
+						direc = adjacents[1][1]
+						l.addDirection(tile,direc)
+						l.addDirection(adjacents[1][0],l.getOpposite(direc))
