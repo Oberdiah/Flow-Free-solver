@@ -20,6 +20,7 @@ class Tile():
 		self.isNode = False
 		# The number is always unique, whereas the color has a very small chance of being duplicated
 		self.number = 0
+		self.imaginary = False
 		self.directions = [c.D.u, c.D.u]
 		self.grid = []
 
@@ -79,13 +80,13 @@ while done == False:
 				print(GenerateNew.lastState)
 
 		if event.type == pygame.MOUSEBUTTONDOWN:
-			if event.button == 1:          
+			if event.button == 1:
 				mouseDragging = True
 				mouseX, mouseY = event.pos
 				currentMouseBox = [mouseX//c.BOXSIZE, mouseY//c.BOXSIZE]
 
 		if event.type == pygame.MOUSEBUTTONUP:
-			if event.button == 1:            
+			if event.button == 1:
 				mouseDragging = False
 
 		if event.type == pygame.MOUSEMOTION:
@@ -115,7 +116,11 @@ while done == False:
 		for y, tile in enumerate(col):
 			s = c.BOXSIZE
 			gt = c.GRIDTHICKNESS
-			color = GenerateNew.colorList[tile.number]
+			color = (0,0,0)
+			if tile.imaginary:
+				color = (127,127,127)
+			else:
+				color = GenerateNew.colorList[tile.number]
 			center = (int((x+0.5)*s), int((y+0.5)*s))
 			pygame.draw.rect(screen, (255,255,255), (x*s+(gt/2), y*s+(gt/2), s-gt, s-gt))
 
