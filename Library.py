@@ -146,6 +146,8 @@ def hasSingleDirection(tile):
 	return (tile.directions[0]==c.D.u and tile.directions[1]!=c.D.u) or (tile.directions[0]!=c.D.u and tile.directions[1]==c.D.u)
 
 def isHead(tile):
+	if tile is None:
+		return False
 	if (tile.imaginary and hasNoDirection(tile)):
 		return True
 	elif (tile.isNode and hasNoDirection(tile)):
@@ -158,7 +160,23 @@ def connected(a,b):
 	return a in getAllInPath_algorithms(b)
 
 def isWall(tile):
+	if tile is None:
+		return True
 	return not isHead(tile) and not isEmpty(tile)
 
 def isEmpty(tile):
+	if tile is None:
+		return True
 	return tile.number==0
+
+def wouldIntersect(a,b):
+	if isEmpty(a) or isEmpty(b):
+		return False
+	p1 = getAllInPath_algorithms(a)
+	p2 = getAllInPath_algorithms(b)
+	for n1 in p1:
+		for n2 in p2:
+			if n2 in [x for x in getAdjacents(n1) if not isEmpty(x)]:
+				if not (isHead(n1) and isHead(n2)):
+					return True
+	return False

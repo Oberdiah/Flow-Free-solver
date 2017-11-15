@@ -139,6 +139,7 @@ def trytrivials(grid):
 			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
 			adjacents = [x for x in adjacents if not l.connected(x[0],tile)]#get rid of connected tiles
 			adjacents = [x for x in adjacents if not l.isWall(x[0])]#get rid of wall tiles
+			adjacents = [x for x in adjacents if not (l.wouldIntersect(tile,x[0]) and l.isHead(x[0]))]#get rid of heads that would cause loops
 			#get rid of heads that are not the same color as this, unless imaginary
 			adjacents = [x for x in adjacents if (not (l.isHead(x[0]) and x[0].number!=tile.number)) or (x[0].imaginary)]
 			#adjacents = [x for x in adjacents if not (l.isHead(x[0]) and x[0].number!=tile.number)]
