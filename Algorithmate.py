@@ -200,6 +200,13 @@ def trytrivials(grid):
 					#turn everything in this path into the new number/imaginarity
 					t.number = newNumber
 					t.imaginary = makeImaginary
+
+	for row in grid:
+		for tile in row:
+			print(str(tile.x)+","+str(tile.y))
+			if str(tile.x)+","+str(tile.y)=="0,0":
+				assert "stupid python"
+			break
 	#Trivial 4
 	#			Runtime: O(n^2)
 	for row in grid:
@@ -211,7 +218,7 @@ def trytrivials(grid):
 				continue#does not have south and east connection
 			vertexAdjacents = [x for x in adjacents]
 			vertexAdjacents.append((tile,c.D.u))
-			southern = [x for x in adjacents if x[1]==c.D.s][0][0]
+			southern = [x for x in vertexAdjacents if x[1]==c.D.s][0][0]
 			adjacentsOfSouthern = l.getAdjacentsWithDirections(southern)
 			adjacentsOfSouthern = [x for x in adjacentsOfSouthern if x[1]==c.D.e]
 			vertexAdjacents.append(adjacentsOfSouthern[0])
@@ -225,6 +232,8 @@ def trytrivials(grid):
 					duplicatesRemoved.append(a)
 			sameNumbers = duplicatesRemoved
 			sameNumbers = [x for x in sameNumbers if len(x)==3]
+			if tile.x == tile.y and tile.x==1:
+				assert "poopface"
 			if len(sameNumbers)==1:
 				#3 nodes on same path found
 				example = [x for x in vertexAdjacents if x[0].number == sameNumbers[0][0][0]][0]
