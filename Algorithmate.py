@@ -201,12 +201,6 @@ def trytrivials(grid):
 					t.number = newNumber
 					t.imaginary = makeImaginary
 
-	for row in grid:
-		for tile in row:
-			print(str(tile.x)+","+str(tile.y))
-			if str(tile.x)+","+str(tile.y)=="0,0":
-				assert "stupid python"
-			break
 	#Trivial 4
 	#			Runtime: O(n^2)
 	for row in grid:
@@ -233,7 +227,7 @@ def trytrivials(grid):
 			sameNumbers = duplicatesRemoved
 			sameNumbers = [x for x in sameNumbers if len(x)==3]
 			if tile.x == tile.y and tile.x==1:
-				assert "poopface"
+				print( "poopface")
 			if len(sameNumbers)==1:
 				#3 nodes on same path found
 				example = [x for x in vertexAdjacents if x[0].number == sameNumbers[0][0][0]][0]
