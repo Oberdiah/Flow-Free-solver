@@ -146,6 +146,10 @@ while done == False:
 					text = myfont.render("?", 1, (0,0,0))
 					rect = text.get_rect()
 					screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
+			if c.SHOW_ALL_TILE_NUMS:
+				text = myfont.render(str(tile.number+1), 1, (0,0,0))
+				rect = text.get_rect()
+				screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
 
 	pygame.display.update()
 	clock.tick(20)

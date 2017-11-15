@@ -28,3 +28,5 @@ allDirections = [D.n, D.s, D.e, D.w]
 all3x3Directions = [(-1,1),  (0,1),  (1,1),
 					(-1,0),          (1,0),
 					(-1,-1), (0,-1), (1,-1)]
+
+SHOW_ALL_TILE_NUMS = False
