@@ -69,6 +69,8 @@ def trysolve():
 
 def trytrivials(grid):
 	#This function attempts trivial solves on the grid.
+	#"Triviality" means it can be proved by only considerning
+	#the direct adjacencies of a node or vertex
 	#A trivial solve is one of the following:
 	#	Trivial 1:
 	#		If a head node has 1 adjacency and only 1, it must
@@ -198,3 +200,38 @@ def trytrivials(grid):
 					#turn everything in this path into the new number/imaginarity
 					t.number = newNumber
 					t.imaginary = makeImaginary
+	#Trivial 4
+	#			Runtime: O(n^2)
+	for row in grid:
+		for tile in row:
+			adjacents = l.getAdjacentsWithDirections(tile)
+			adjacents = [x for x in adjacents if x[0] is not None]#remove none
+			adjacents = [x for x in adjacents if x[1]==c.D.s or x[1]==c.D.e]#get south and east
+			if len(adjacents)!=2:
+				continue#does not have south and east connection
+			vertexAdjacents = [x for x in adjacents]
+			vertexAdjacents.append((tile,c.D.u))
+			southern = [x for x in adjacents if x[1]==c.D.s][0][0]
+			adjacentsOfSouthern = l.getAdjacentsWithDirections(southern)
+			adjacentsOfSouthern = [x for x in adjacents if x[1]==c.D.e]
+			vertexAdjacents.append(adjacentsOfSouthern[0])
+			numbers = [(x[0].number,x[0].imaginary) for x in adjacents]
+			sameNumbers = [ [x for x in numbers if x[0]==numbers[0][0] and x[1]==numbers[0][1]] ]
+			for a in range(1,len(numbers)):
+				sameNumbers.append([x for x in numbers if x[0]==numbers[a][0] and x[1]==numbers[a][1]])
+			sameNumbers = [x for x in sameNumbers if len(x)==3]
+			if len(sameNumbers)==1:
+				#3 nodes on same path found
+				example = sameNumbers[0][0]
+				uglyDuckling = [x for x in vertexAdjacents if x.number!=example[0] or x.imaginary!=example[1]]
+				#(don't worry, the duckling is beautiful on the inside)
+				#uglyDuckling contains the odd one out.  It should become a single
+				#imaginary head with a new number.
+				if (isEmpty(uglyDuckling)) and not isEmpty(example):
+					#cases where this doesn't work is if uglyDuckling is already full
+					#and where instead of having 3 same-path nodes the vertex merely had
+					#3 empty nodes.  I actually think having both requirements is
+					#redundant, but just to be safe I'm putting both
+					uglyDuckling.imaginary = True
+					l.numberOfImaginaryLines+=1
+					uglyDuckling.number = l.numberOfImaginaryLines
