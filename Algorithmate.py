@@ -106,6 +106,14 @@ def trytrivials(grid):
 	#			2 adjacencies which it moves through.  Thus A has exactly 2
 	#			adjacencies which it moves to, and thus if there are only
 	#			2 possible adjacencies then it must move through them.
+	#
+	#	Trivial 4:
+	#		If a vertex is surround by 4 adjacencies, 3 of which belong to the
+	#		same path, then the fourth one must belong to a different path
+	#		Proof:
+	#			Assume that this is not true.  Then, it violates rule 3
+	#			of the second definition of Flow, that no vertex is surrounded
+	#			by four adjacencies of the same path.
 
 	#Trivial 1
 	#			Runtime: O(n^2)
