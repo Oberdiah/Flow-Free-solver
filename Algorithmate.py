@@ -181,7 +181,7 @@ def trytrivials(grid):
 				direc = adjacents[0][1]
 				l.addDirection(tile,direc)
 				l.addDirection(adjacents[0][0],l.getOpposite(direc))
-				pathToChange = l.getAllInPath(adjacents[0][0])
+				pathToChange = l.getAllInPath_algorithms(adjacents[0][0])
 				for t in pathToChange:
 					#turn everything in this path into the new number/imaginarity
 					t.number = newNumber
@@ -189,7 +189,7 @@ def trytrivials(grid):
 				direc = adjacents[1][1]
 				l.addDirection(tile,direc)
 				l.addDirection(adjacents[1][0],l.getOpposite(direc))
-				pathToChange = l.getAllInPath(adjacents[1][0])
+				pathToChange = l.getAllInPath_algorithms(adjacents[1][0])
 				for t in pathToChange:
 					#turn everything in this path into the new number/imaginarity
 					t.number = newNumber

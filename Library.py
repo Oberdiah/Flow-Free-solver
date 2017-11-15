@@ -49,13 +49,32 @@ def getAllInPath(n1):
 			all.extend(getAllInPathFromDirection(n1, getNextTo(n1, *d), []))
 	return all
 
+def getAllInPath_algorithms(n1):
+	all = [n1]
+	if isEmpty(n1):
+		return all
+	for d in n1.directions:
+		if d != c.D.u:
+			all.extend(getAllInPathFromDirection_algorithms(n1, getNextTo(n1, *d), []))
+	return all
+
+
 def getAllInPathFromDirection(tileBefore, tile, currentStack):
 	currentStack.append(tile)
-	if not isHead(tile):#not tile.isNode:
+	if not tile.isNode:
 		newTile = getNextTo(tile, *tile.directions[0])
 		if newTile == tileBefore:
 			newTile = getNextTo(tile, *tile.directions[1])
 		getAllInPathFromDirection(tile, newTile, currentStack)
+	return currentStack
+
+def getAllInPathFromDirection_algorithms(tileBefore, tile, currentStack):
+	currentStack.append(tile)
+	if not isHead(tile):
+		newTile = getNextTo(tile, *tile.directions[0])
+		if newTile == tileBefore:
+			newTile = getNextTo(tile, *tile.directions[1])
+		getAllInPathFromDirection_algorithms(tile, newTile, currentStack)
 	return currentStack
 
 def getNodeDirection(node):
@@ -134,7 +153,7 @@ def isHead(tile):
 	return False
 
 def connected(a,b):
-	return a in getAllInPath(b)
+	return a in getAllInPath_algorithms(b)
 
 def isWall(tile):
 	return not isHead(tile) and not isEmpty(tile)
