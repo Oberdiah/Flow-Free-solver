@@ -93,6 +93,19 @@ def trytrivials(grid):
 	#			valid path P between them.  However, if that were the case, the
 	#			starting heads of P would be adjacent but not sequential in P,
 	#			thus forming a loop.
+	#
+	#	Trivial 3:
+	#		If an empty node has only 2 adjacencies, it must pass through them
+	#		Proof:
+	#			An empty node 'A' by definition is a node that has no known path
+	#			running through it.  However, as every node must be part of a
+	#			path in the solution, we know that A must be on a path.  As
+	#			the only parts of a path that do not go to two different points
+	#			are the starting head nodes, and an empty node is by definition
+	#			not a starting head node, any empty node must have 2 and exactly
+	#			2 adjacencies which it moves through.  Thus A has exactly 2
+	#			adjacencies which it moves to, and thus if there are only
+	#			2 possible adjacencies then it must move through them.
 
 	#Trivial 1
 	#			Runtime: O(n^2)
