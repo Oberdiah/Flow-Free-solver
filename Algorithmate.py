@@ -113,7 +113,7 @@ def trytrivials(grid):
 	#		Proof:
 	#			Assume that this is not true.  Then, it violates rule 3
 	#			of the second definition of Flow, that no vertex is surrounded
-	#			by four adjacencies of the same path.
+	#			by four nodes of the same path.
 
 	#Trivial 1
 	#			Runtime: O(n^2)
@@ -182,6 +182,7 @@ def trytrivials(grid):
 				l.addDirection(adjacents[0][0],l.getOpposite(direc))
 				pathToChange = l.getAllInPath(adjacents[0][0])
 				for t in pathToChange:
+					#turn everything in this path into the new number/imaginarity
 					t.number = newNumber
 					t.imaginary = makeImaginary
 				direc = adjacents[1][1]
@@ -189,5 +190,6 @@ def trytrivials(grid):
 				l.addDirection(adjacents[1][0],l.getOpposite(direc))
 				pathToChange = l.getAllInPath(adjacents[1][0])
 				for t in pathToChange:
+					#turn everything in this path into the new number/imaginarity
 					t.number = newNumber
 					t.imaginary = makeImaginary
