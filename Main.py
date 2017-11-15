@@ -85,13 +85,13 @@ while done == False:
 					n1.directions = [c.D.u, c.D.u]
 
 		if event.type == pygame.MOUSEBUTTONDOWN:
-			if event.button == 1:          
+			if event.button == 1:
 				mouseDragging = True
 				mouseX, mouseY = event.pos
 				currentMouseBox = [mouseX//c.BOXSIZE, mouseY//c.BOXSIZE]
 
 		if event.type == pygame.MOUSEBUTTONUP:
-			if event.button == 1:            
+			if event.button == 1:
 				mouseDragging = False
 
 		if event.type == pygame.MOUSEMOTION:
@@ -128,11 +128,11 @@ while done == False:
 		for y, tile in enumerate(col):
 			s = c.BOXSIZE
 			gt = c.GRIDTHICKNESS
-			if tile.number == -1:
-				color = (0,0,0)
+			color = (0,0,0)
+			if tile.imaginary:
+				color = (127,127,127)
 			else:
 				color = GenerateNew.colorList[tile.number]
-
 			center = (int((x+0.5)*s), int((y+0.5)*s))
 			pygame.draw.rect(screen, (255,255,255), (x*s+(gt/2), y*s+(gt/2), s-gt, s-gt))
 
@@ -148,6 +148,18 @@ while done == False:
 			if tile.isNode:
 				rad = int(s/3)
 				pygame.draw.circle(screen, color, center, rad)
+				textcolor = (255,255,255) if color[0]+color[1]+color[2]<255 else (0,0,0)
+				text = myfont.render(str(tile.number+1), 1, textcolor)
+				rect = text.get_rect()
+				screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
+			elif l.isHead(tile):
+				rad = int(s/3)
+				pygame.draw.circle(screen, color, center, rad)
+				if (tile.imaginary):
+					text = myfont.render("?", 1, (0,0,0))
+					rect = text.get_rect()
+					screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
+			if c.SHOW_ALL_TILE_NUMS:
 				text = myfont.render(str(tile.number+1), 1, (0,0,0))
 				rect = text.get_rect()
 				screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))

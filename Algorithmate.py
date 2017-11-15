@@ -69,6 +69,8 @@ def trysolve():
 
 def trytrivials(grid):
 	#This function attempts trivial solves on the grid.
+	#"Triviality" means it can be proved by only considerning
+	#the direct adjacencies of a node or vertex
 	#A trivial solve is one of the following:
 	#	Trivial 1:
 	#		If a head node has 1 adjacency and only 1, it must
@@ -93,6 +95,39 @@ def trytrivials(grid):
 	#			valid path P between them.  However, if that were the case, the
 	#			starting heads of P would be adjacent but not sequential in P,
 	#			thus forming a loop.
+	#
+	#	Trivial 3:
+	#		If an empty node has only 2 adjacencies, it must pass through them
+	#		Proof:
+	#			An empty node 'A' by definition is a node that has no known path
+	#			running through it.  However, as every node must be part of a
+	#			path in the solution, we know that A must be on a path.  As
+	#			the only parts of a path that do not go to two different points
+	#			are the starting head nodes, and an empty node is by definition
+	#			not a starting head node, any empty node must have 2 and exactly
+	#			2 adjacencies which it moves through.  Thus A has exactly 2
+	#			adjacencies which it moves to, and thus if there are only
+	#			2 possible adjacencies then it must move through them.
+	#
+	#	Trivial 4:
+	#		If a vertex is surround by 4 adjacencies, 3 of which belong to the
+	#		same path, then the fourth one must belong to a different path
+	#		Proof:
+	#			Assume that this is not true.  Then, it violates rule 3
+	#			of the second definition of Flow, that no vertex is surrounded
+	#			by four nodes of the same path.
+	#
+	#		Corrolary:
+	#			Let a node N be the node belonging to a new path as deduced in
+	#			the previous statement.  This node must have connections going
+	#			parallel to the paths: (A,B) and (B,C) where C is the node
+	#			diagonal from it and A,C are the other two nodes adjacent to
+	#			the same vertex.
+	#			Proof:
+	#				As N is decidedly not on the same path as (A,B,C) by
+	#				Trivial 4, it only has 2 valid adjacencies.  By Trivial 3
+	#				it must travel to these adjacencies. These adjacencies are
+	#				parallel to the paths (A,B) and (B,C), so QED
 
 	#Trivial 1
 	#			Runtime: O(n^2)
@@ -104,8 +139,10 @@ def trytrivials(grid):
 			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
 			adjacents = [x for x in adjacents if not l.connected(x[0],tile)]#get rid of connected tiles
 			adjacents = [x for x in adjacents if not l.isWall(x[0])]#get rid of wall tiles
-			#get rid of heads that are not the same color as this
-			adjacents = [x for x in adjacents if not (l.isHead(x[0]) and x[0].number!=tile.number)]
+			adjacents = [x for x in adjacents if not (l.wouldIntersect(tile,x[0]) and l.isHead(x[0]))]#get rid of heads that would cause loops
+			#get rid of heads that are not the same color as this, unless imaginary
+			adjacents = [x for x in adjacents if (not (l.isHead(x[0]) and x[0].number!=tile.number)) or (x[0].imaginary)]
+			#adjacents = [x for x in adjacents if not (l.isHead(x[0]) and x[0].number!=tile.number)]
 			#if adjacents is only size 1, it only has one possible move:
 			if len(adjacents) == 1:
 				direc = adjacents[0][1]
@@ -113,6 +150,7 @@ def trytrivials(grid):
 				l.addDirection(adjacents[0][0],l.getOpposite(direc))
 				#adjacents[0][0].color = tile.color
 				adjacents[0][0].number = tile.number
+				adjacents[0][0].imaginary = tile.imaginary
 
 
 	#Trivial 2
@@ -125,10 +163,132 @@ def trytrivials(grid):
 			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
 			#get nodes it is adjacent to
 			adjacents = [x for x in adjacents if l.isHead(x[0])]
-			adjacents = [x for x in adjacents if x[0].number==tile.number]
+			adjacents = [x for x in adjacents if x[0].number==tile.number and not (tile.imaginary or x[0].imaginary)]
 			#if adjacents is size 1, it is the required move:
 			if len(adjacents)==1:
 				direc = adjacents[0][1]
 				l.addDirection(tile,direc)
 				l.addDirection(adjacents[0][0],l.getOpposite(direc))
 				adjacents[0][0].number = tile.number
+				#Should never connect imaginary heads like this,
+				#hence the line below is commented out
+				#adjacents[0][0].imaginary = tile.imaginary
+
+	#Trivial 3
+	#			Runtime: O(n^2)
+	for row in grid:
+		for tile in row:
+			if not l.isEmpty(tile):
+				continue
+			adjacents = l.getAdjacentsWithDirections(tile)
+			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
+			adjacents = [x for x in adjacents if not l.isWall(x[0])]#get rid of 'walls'
+			#if adjacents have size 2, then it is a valid path
+			if len(adjacents)==2:
+				headsAdjacent = [x for x in adjacents if l.isHead(x[0])]
+				realAdjacent = [x for x in headsAdjacent if not x[0].imaginary]
+				imaginaryAdjacent = [x for x in headsAdjacent if x[0].imaginary]
+				#if all heads adjacent to are imaginary, this line is imaginary
+				makeImaginary = len(imaginaryAdjacent) == len(headsAdjacent)
+				newNumber = realAdjacent[0][0].number if len(realAdjacent) > 0 else (imaginaryAdjacent[0][0].number if len(imaginaryAdjacent)> 0 else 0)
+				if len(headsAdjacent)==0:
+					l.numberOfImaginaryLines+=1
+					newNumber = l.numberOfImaginaryLines
+				#now hook tiles up
+				tile.number = newNumber
+				tile.imaginary = makeImaginary
+				direc = adjacents[0][1]
+				l.addDirection(tile,direc)
+				l.addDirection(adjacents[0][0],l.getOpposite(direc))
+				pathToChange = l.getAllInPath_algorithms(adjacents[0][0])
+				for t in pathToChange:
+					#turn everything in this path into the new number/imaginarity
+					t.number = newNumber
+					t.imaginary = makeImaginary
+				direc = adjacents[1][1]
+				l.addDirection(tile,direc)
+				l.addDirection(adjacents[1][0],l.getOpposite(direc))
+				pathToChange = l.getAllInPath_algorithms(adjacents[1][0])
+				for t in pathToChange:
+					#turn everything in this path into the new number/imaginarity
+					t.number = newNumber
+					t.imaginary = makeImaginary
+
+	#Trivial 4
+	#			Runtime: O(n^2)
+	for row in grid:
+		for tile in row:
+			adjacents = l.getAdjacentsWithDirections(tile)
+			adjacents = [x for x in adjacents if x[0] is not None]#remove none
+			adjacents = [x for x in adjacents if x[1]==c.D.s or x[1]==c.D.e]#get south and east
+			if len(adjacents)!=2:
+				continue#does not have south and east connection
+			vertexAdjacents = [x for x in adjacents]
+			vertexAdjacents.append((tile,c.D.u))
+			southern = [x for x in vertexAdjacents if x[1]==c.D.s][0][0]
+			adjacentsOfSouthern = l.getAdjacentsWithDirections(southern)
+			adjacentsOfSouthern = [x for x in adjacentsOfSouthern if x[1]==c.D.e]
+			vertexAdjacents.append(adjacentsOfSouthern[0])
+			numbers = [(x[0].number,x[0].imaginary) for x in vertexAdjacents]
+			sameNumbers = [ [x for x in numbers if x[0]==numbers[0][0] and x[1]==numbers[0][1]] ]
+			for a in range(1,len(numbers)):
+				sameNumbers.append([x for x in numbers if x[0]==numbers[a][0] and x[1]==numbers[a][1]])
+			duplicatesRemoved = []
+			for a in sameNumbers:
+				if not a in duplicatesRemoved:
+					duplicatesRemoved.append(a)
+			sameNumbers = duplicatesRemoved
+			sameNumbers = [x for x in sameNumbers if len(x)==3]
+			if len(sameNumbers)==1:
+				#3 nodes on same path found
+				example = [x for x in vertexAdjacents if x[0].number == sameNumbers[0][0][0]][0]
+				uglyDuckling = [x for x in vertexAdjacents if x[0].number!=example[0] or x[0].imaginary!=example[1]][0][0]
+				#(don't worry, the duckling is beautiful on the inside)
+				#uglyDuckling contains the odd one out.  It should become a single
+				#imaginary head with a new number.
+				if (l.isEmpty(uglyDuckling)) and not l.isEmpty(example[0]):
+					#cases where this doesn't work is if uglyDuckling is already full
+					#and where instead of having 3 same-path nodes the vertex merely had
+					#3 empty nodes.  I actually think having both requirements is
+					#redundant, but just to be safe I'm putting both
+					uglyDuckling.imaginary = True
+					l.numberOfImaginaryLines+=1
+					uglyDuckling.number = l.numberOfImaginaryLines
+
+					#Now, let's do the corollary.
+					ducklingAdjacents = l.getAdjacentsWithDirections(uglyDuckling)
+					ducklingNotties = [x[0] for x in vertexAdjacents]
+					ducklingAdjacents = [x for x in ducklingAdjacents if (x[0] not in ducklingNotties)]
+
+					#resolve de-imaginification
+					relevants = [uglyDuckling,ducklingAdjacents[0][0],ducklingAdjacents[1][0]]
+					emptyRelevants = [x for x in relevants if l.isEmpty(x)]
+					imaginaryRelevants = [x for x in relevants if x.imaginary]
+					realRelevants = [x for x in relevants if not x.imaginary and x not in emptyRelevants]
+
+					makeImaginary = False
+					newNumber = 0
+					if len(realRelevants)==0:
+						makeImaginary = True
+						if len(emptyRelevants)==3:
+							l.numberOfImaginaryLines+=1
+							newNumber = l.numberOfImaginaryLines
+						else:
+							newNumber = imaginaryRelevants[0].number
+					else:
+						makeImaginary = False
+						newNumber = realRelevants[0].number
+
+					#get the mentioned nodes:
+					direc = ducklingAdjacents[0][1]
+					l.addDirection(uglyDuckling,direc)
+					l.addDirection(ducklingAdjacents[0][0],l.getOpposite(direc))
+					direc = ducklingAdjacents[1][1]
+					l.addDirection(uglyDuckling,direc)
+					l.addDirection(ducklingAdjacents[1][0],l.getOpposite(direc))
+					uglyDuckling.imaginary = makeImaginary
+					uglyDuckling.number = newNumber
+					ducklingAdjacents[0][0].imaginary = makeImaginary
+					ducklingAdjacents[1][0].imaginary = makeImaginary
+					ducklingAdjacents[0][0].number = newNumber
+					ducklingAdjacents[1][0].number = newNumber

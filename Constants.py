@@ -17,8 +17,8 @@ computerGrid = []
 
 # Essentially a directions Enum
 class D():
-	n = (0,1)
-	s = (0,-1)
+	n = (0,-1)
+	s = (0,1)
 	e = (1,0)
 	w = (-1,0)
 	u = (0,0)
@@ -28,3 +28,5 @@ allDirections = [D.n, D.s, D.e, D.w]
 all3x3Directions = [(-1,1),  (0,1),  (1,1),
 					(-1,0),          (1,0),
 					(-1,-1), (0,-1), (1,-1)]
+
+SHOW_ALL_TILE_NUMS = False

@@ -1,6 +1,8 @@
 import Constants as c
 from random import random, sample
 
+numberOfImaginaryLines = 0
+
 def shuffle(lst):
 	return sample(lst, len(lst))
 
@@ -40,10 +42,22 @@ def hasDirection(n1):
 
 def getAllInPath(n1):
 	all = [n1]
+	if isEmpty(n1):
+		return all
 	for d in n1.directions:
 		if d != c.D.u:
 			all.extend(getAllInPathFromDirection(n1, getNextTo(n1, *d), []))
 	return all
+
+def getAllInPath_algorithms(n1):
+	all = [n1]
+	if isEmpty(n1):
+		return all
+	for d in n1.directions:
+		if d != c.D.u:
+			all.extend(getAllInPathFromDirection_algorithms(n1, getNextTo(n1, *d), []))
+	return all
+
 
 def getAllInPathFromDirection(tileBefore, tile, currentStack):
 	currentStack.append(tile)
@@ -52,6 +66,15 @@ def getAllInPathFromDirection(tileBefore, tile, currentStack):
 		if newTile == tileBefore:
 			newTile = getNextTo(tile, *tile.directions[1])
 		getAllInPathFromDirection(tile, newTile, currentStack)
+	return currentStack
+
+def getAllInPathFromDirection_algorithms(tileBefore, tile, currentStack):
+	currentStack.append(tile)
+	if not isHead(tile):
+		newTile = getNextTo(tile, *tile.directions[0])
+		if newTile == tileBefore:
+			newTile = getNextTo(tile, *tile.directions[1])
+		getAllInPathFromDirection_algorithms(tile, newTile, currentStack)
 	return currentStack
 
 def getNodeDirection(node):
@@ -123,14 +146,37 @@ def hasSingleDirection(tile):
 	return (tile.directions[0]==c.D.u and tile.directions[1]!=c.D.u) or (tile.directions[0]!=c.D.u and tile.directions[1]==c.D.u)
 
 def isHead(tile):
-	if (tile.isNode and hasNoDirection(tile)):
+	if tile is None:
+		return False
+	if (tile.imaginary and hasNoDirection(tile)):
+		return True
+	elif (tile.isNode and hasNoDirection(tile)):
 		return True
 	elif (not tile.isNode) and hasSingleDirection(tile):
 		return True
 	return False
 
 def connected(a,b):
-	return a in getAllInPath(b)
+	return a in getAllInPath_algorithms(b)
 
 def isWall(tile):
-	return not isHead(tile) and tile.number!=-1
+	if tile is None:
+		return True
+	return not isHead(tile) and not isEmpty(tile)
+
+def isEmpty(tile):
+	if tile is None:
+		return True
+	return tile.number==0
+
+def wouldIntersect(a,b):
+	if isEmpty(a) or isEmpty(b):
+		return False
+	p1 = getAllInPath_algorithms(a)
+	p2 = getAllInPath_algorithms(b)
+	for n1 in p1:
+		for n2 in p2:
+			if n2 in [x for x in getAdjacents(n1) if not isEmpty(x)]:
+				if not (isHead(n1) and isHead(n2)):
+					return True
+	return False
