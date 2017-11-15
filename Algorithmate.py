@@ -131,3 +131,4 @@ def trytrivials(grid):
 				direc = adjacents[0][1]
 				l.addDirection(tile,direc)
 				l.addDirection(adjacents[0][0],l.getOpposite(direc))
+				adjacents[0][0].number = tile.number
