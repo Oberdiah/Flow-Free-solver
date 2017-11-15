@@ -136,7 +136,7 @@ while done == False:
 			if tile.isNode:
 				rad = int(s/3)
 				pygame.draw.circle(screen, color, center, rad)
-				textcolor = (255-color[0],255-color[1],255-color[2]) if color[0]+color[1]+color[2]<255 else (0,0,0)
+				textcolor = (255,255,255) if color[0]+color[1]+color[2]<255 else (0,0,0)
 				text = myfont.render(str(tile.number+1), 1, textcolor)
 				rect = text.get_rect()
 				screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
