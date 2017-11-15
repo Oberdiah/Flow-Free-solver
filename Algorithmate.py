@@ -116,6 +116,18 @@ def trytrivials(grid):
 	#			Assume that this is not true.  Then, it violates rule 3
 	#			of the second definition of Flow, that no vertex is surrounded
 	#			by four nodes of the same path.
+	#
+	#		Corrolary:
+	#			Let a node N be the node belonging to a new path as deduced in
+	#			the previous statement.  This node must have connections going
+	#			parallel to the paths: (A,B) and (B,C) where C is the node
+	#			diagonal from it and A,C are the other two nodes adjacent to
+	#			the same vertex.
+	#			Proof:
+	#				As N is decidedly not on the same path as (A,B,C) by
+	#				Trivial 4, it only has 2 valid adjacencies.  By Trivial 3
+	#				it must travel to these adjacencies. These adjacencies are
+	#				parallel to the paths (A,B) and (B,C), so QED
 
 	#Trivial 1
 	#			Runtime: O(n^2)
@@ -241,3 +253,41 @@ def trytrivials(grid):
 					uglyDuckling.imaginary = True
 					l.numberOfImaginaryLines+=1
 					uglyDuckling.number = l.numberOfImaginaryLines
+
+					#Now, let's do the corollary.
+					ducklingAdjacents = l.getAdjacentsWithDirections(uglyDuckling)
+					ducklingNotties = [x[0] for x in vertexAdjacents]
+					ducklingAdjacents = [x for x in ducklingAdjacents if (x[0] not in ducklingNotties)]
+
+					#resolve de-imaginification
+					relevants = [uglyDuckling,ducklingAdjacents[0][0],ducklingAdjacents[1][0]]
+					emptyRelevants = [x for x in relevants if l.isEmpty(x)]
+					imaginaryRelevants = [x for x in relevants if x.imaginary]
+					realRelevants = [x for x in relevants if not x.imaginary and x not in emptyRelevants]
+
+					makeImaginary = False
+					newNumber = 0
+					if len(realRelevants)==0:
+						makeImaginary = True
+						if len(emptyRelevants)==3:
+							l.numberOfImaginaryLines+=1
+							newNumber = l.numberOfImaginaryLines
+						else:
+							newNumber = imaginaryRelevants[0].number
+					else:
+						makeImaginary = False
+						newNumber = realRelevants[0].number
+
+					#get the mentioned nodes:
+					direc = ducklingAdjacents[0][1]
+					l.addDirection(uglyDuckling,direc)
+					l.addDirection(ducklingAdjacents[0][0],l.getOpposite(direc))
+					direc = ducklingAdjacents[1][1]
+					l.addDirection(uglyDuckling,direc)
+					l.addDirection(ducklingAdjacents[1][0],l.getOpposite(direc))
+					uglyDuckling.imaginary = makeImaginary
+					uglyDuckling.number = newNumber
+					ducklingAdjacents[0][0].imaginary = makeImaginary
+					ducklingAdjacents[1][0].imaginary = makeImaginary
+					ducklingAdjacents[0][0].number = newNumber
+					ducklingAdjacents[1][0].number = newNumber
