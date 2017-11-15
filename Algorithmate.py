@@ -135,6 +135,7 @@ def trytrivials(grid):
 				l.addDirection(adjacents[0][0],l.getOpposite(direc))
 				#adjacents[0][0].color = tile.color
 				adjacents[0][0].number = tile.number
+				adjacents[0][0].imaginary = tile.imaginary
 
 
 	#Trivial 2
@@ -154,6 +155,7 @@ def trytrivials(grid):
 				l.addDirection(tile,direc)
 				l.addDirection(adjacents[0][0],l.getOpposite(direc))
 				adjacents[0][0].number = tile.number
+				adjacents[0][0].imaginary = tile.imaginary
 
 	#Trivial 3
 	#			Runtime: O(n^2)
