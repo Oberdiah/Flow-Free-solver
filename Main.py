@@ -19,13 +19,13 @@ class Tile():
 		# If it is a node then only the first direction is ever used
 		self.isNode = False
 		# The number is always unique, whereas the color has a very small chance of being duplicated
-		self.number = 0
+		self.number = -1
 		self.directions = [c.D.u, c.D.u]
 		self.grid = []
 
 	def resetMe(self):
 		self.isNode = False
-		self.number = 0
+		self.number = -1
 		self.directions = [c.D.u, c.D.u]
 
 	def clone(self):
@@ -49,7 +49,7 @@ showSolution = False
 showComputer = False
 
 mouseDragging = False
-currentMouseBox = [0,0]
+currentMouseBox = [-1,-1]
 
 def testingFunc():
 	#fixSquares()
@@ -77,6 +77,12 @@ while done == False:
 				showComputer = not showComputer
 			if event.key == pygame.K_y:
 				print(GenerateNew.lastState)
+			if event.key == pygame.K_i:
+				GenerateNew.mergeNodes()
+			if event.key == pygame.K_e:
+				if currentMouseBox != [-1,-1]:
+					n1 = c.userGrid[currentMouseBox[0]][currentMouseBox[1]]
+					n1.directions = [c.D.u, c.D.u]
 
 		if event.type == pygame.MOUSEBUTTONDOWN:
 			if event.button == 1:          
@@ -95,8 +101,15 @@ while done == False:
 				if currentMouseBox != newMouseBox:
 					n1 = c.userGrid[currentMouseBox[0]][currentMouseBox[1]]
 					n2 = c.userGrid[newMouseBox[0]][newMouseBox[1]]
+
+					ab1 = abs(n1.x-n2.x)
+					ab2 = abs(n1.y-n2.y)
+					if ab1 > 1 or ab2 > 1 or (ab1 == 1 and ab2 == 1):
+						continue
+
 					n2.directions = [c.D.u, c.D.u]
-					l.createBond(n1,n2)
+					n1.directions[1] = l.getDirectionFromTo(n1,n2)
+					n2.directions[0] = l.getDirectionFromTo(n2,n1)
 					n2.number = n1.number
 
 				currentMouseBox = newMouseBox
@@ -115,7 +128,11 @@ while done == False:
 		for y, tile in enumerate(col):
 			s = c.BOXSIZE
 			gt = c.GRIDTHICKNESS
-			color = GenerateNew.colorList[tile.number]
+			if tile.number == -1:
+				color = (0,0,0)
+			else:
+				color = GenerateNew.colorList[tile.number]
+
 			center = (int((x+0.5)*s), int((y+0.5)*s))
 			pygame.draw.rect(screen, (255,255,255), (x*s+(gt/2), y*s+(gt/2), s-gt, s-gt))
 
@@ -136,6 +153,6 @@ while done == False:
 				screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
 
 	pygame.display.update()
-	clock.tick(20)
+	clock.tick(100)
 
 pygame.quit()

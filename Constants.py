@@ -1,5 +1,5 @@
 # Size of overall grid (In boxes)
-GRIDSIZE = 20
+GRIDSIZE = 7
 # Size of boxes (In pixels) (Must be even)
 BOXSIZE = 1000//GRIDSIZE
 # Grid thickness (Must be even)

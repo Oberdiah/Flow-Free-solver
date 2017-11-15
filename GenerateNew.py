@@ -19,13 +19,13 @@ def generateNew():
 	mergeNodes()
 	mergeNodesNew()
 	mergePaths()
-	checkForRedo()
+	#checkForRedo()
 
 	c.computerGrid = l.cloneGrid(c.solutionGrid)
 	for tile in l.expandGrid(c.computerGrid):
 		tile.directions = [c.D.u, c.D.u]
 		if not tile.isNode:
-			tile.number = 0
+			tile.number = -1
 	c.userGrid = l.cloneGrid(c.computerGrid)
 
 	failureNum = 0
@@ -60,7 +60,6 @@ def numberNear(tile, number):
 	return numNear
 
 def createPaths():
-	nodesNumber = 0
 	for tile in l.shuffle(l.expandGrid(c.solutionGrid)):
 		if not tile.isNode and tile.directions[1] == c.D.u:
 			tile.isNode = True
