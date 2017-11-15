@@ -51,7 +51,7 @@ def getAllInPath(n1):
 
 def getAllInPathFromDirection(tileBefore, tile, currentStack):
 	currentStack.append(tile)
-	if not tile.isNode:
+	if not isHead(tile):#not tile.isNode:
 		newTile = getNextTo(tile, *tile.directions[0])
 		if newTile == tileBefore:
 			newTile = getNextTo(tile, *tile.directions[1])
