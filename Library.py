@@ -42,6 +42,8 @@ def hasDirection(n1):
 
 def getAllInPath(n1):
 	all = [n1]
+	if isEmpty(n1):
+		return all
 	for d in n1.directions:
 		if d != c.D.u:
 			all.extend(getAllInPathFromDirection(n1, getNextTo(n1, *d), []))
