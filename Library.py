@@ -138,4 +138,4 @@ def isWall(tile):
 	return not isHead(tile) and not isEmpty(tile)
 
 def isEmpty(tile):
-	return tile.number!=0
+	return tile.number==0
