@@ -226,9 +226,6 @@ def trytrivials(grid):
 					duplicatesRemoved.append(a)
 			sameNumbers = duplicatesRemoved
 			sameNumbers = [x for x in sameNumbers if len(x)==3]
-			if tile.x == 0 and tile.y==0:
-				print("Poopface")
-				print(numbers)
 			if len(sameNumbers)==1:
 				#3 nodes on same path found
 				example = [x for x in vertexAdjacents if x[0].number == sameNumbers[0][0][0]][0]

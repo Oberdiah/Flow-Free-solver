@@ -146,7 +146,9 @@ def hasSingleDirection(tile):
 	return (tile.directions[0]==c.D.u and tile.directions[1]!=c.D.u) or (tile.directions[0]!=c.D.u and tile.directions[1]==c.D.u)
 
 def isHead(tile):
-	if (tile.isNode and hasNoDirection(tile)):
+	if (tile.imaginary and hasNoDirection(tile)):
+		return True
+	elif (tile.isNode and hasNoDirection(tile)):
 		return True
 	elif (not tile.isNode) and hasSingleDirection(tile):
 		return True
