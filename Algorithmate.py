@@ -165,6 +165,44 @@ def trytrivials(grid):
 			adjacents = [x for x in adjacents if not l.isWall(x[0])]#get rid of 'walls'
 			#if adjacents have size 2, then it is a valid path
 			if len(adjacents)==2:
+				headsAdjacent = [x for x in adjacents if l.isHead(x[0])]
+				realAdjacent = [x for x in headsAdjacent if not x[0].imaginary]
+				imaginaryAdjacent = [x for x in headsAdjacent if x[0].imaginary]
+				#if all heads adjacent to are imaginary, this line is imaginary
+				makeImaginary = len(imaginaryAdjacent) == len(headsAdjacent)
+				newNumber = realAdjacent[0][0].number if len(realAdjacent) > 0 else (imaginaryAdjacent[0][0].number if len(imaginaryAdjacent)> 0 else 0)
+				if len(headsAdjacent)==0:
+					l.numberOfImaginaryLines+=1
+					newNumber = l.numberOfImaginaryLines
+				#now hook tiles up
+				tile.number = newNumber
+				tile.imaginary = makeImaginary
+				direc = adjacents[0][1]
+				l.addDirection(tile,direc)
+				l.addDirection(adjacents[0][0],l.getOpposite(direc))
+				pathToChange = l.getAllInPath(adjacents[0][0])
+				for t in pathToChange:
+					t.number = newNumber
+					t.imaginary = makeImaginary
+				direc = adjacents[1][1]
+				l.addDirection(tile,direc)
+				l.addDirection(adjacents[1][0],l.getOpposite(direc))
+				pathToChange = l.getAllInPath(adjacents[1][0])
+				for t in pathToChange:
+					t.number = newNumber
+					t.imaginary = makeImaginary
+
+
+	"""
+	for row in grid:
+		for tile in row:
+			if not l.isEmpty(tile):
+				continue
+			adjacents = l.getAdjacentsWithDirections(tile)
+			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
+			adjacents = [x for x in adjacents if not l.isWall(x[0])]#get rid of 'walls'
+			#if adjacents have size 2, then it is a valid path
+			if len(adjacents)==2:
 				#first check if it should be imaginary or not:
 				#If adjacent to a head, it is not imaginary
 				headsAdjacent = [x for x in adjacents if l.isHead(x[0])]
@@ -225,6 +263,9 @@ def trytrivials(grid):
 						#if neither of them are imaginary:
 						tile.number = adjacents[0][0].number
 						direc = adjacents[0][1]
+						print(tile.number)
+						print(tile.imaginary)
+						print(tile.directions)
 						l.addDirection(tile,direc)
 						l.addDirection(adjacents[0][0],l.getOpposite(direc))
 						direc = adjacents[1][1]
@@ -260,3 +301,4 @@ def trytrivials(grid):
 						direc = adjacents[1][1]
 						l.addDirection(tile,direc)
 						l.addDirection(adjacents[1][0],l.getOpposite(direc))
+	"""
