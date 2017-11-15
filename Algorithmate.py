@@ -148,14 +148,16 @@ def trytrivials(grid):
 			adjacents = [x for x in adjacents if x[0] is not None]#get rid of 'nones'
 			#get nodes it is adjacent to
 			adjacents = [x for x in adjacents if l.isHead(x[0])]
-			adjacents = [x for x in adjacents if x[0].number==tile.number]
+			adjacents = [x for x in adjacents if x[0].number==tile.number and not (tile.imaginary or x[0].imaginary)]
 			#if adjacents is size 1, it is the required move:
 			if len(adjacents)==1:
 				direc = adjacents[0][1]
 				l.addDirection(tile,direc)
 				l.addDirection(adjacents[0][0],l.getOpposite(direc))
 				adjacents[0][0].number = tile.number
-				adjacents[0][0].imaginary = tile.imaginary
+				#Should never connect imaginary heads like this,
+				#hence the line below is commented out
+				#adjacents[0][0].imaginary = tile.imaginary
 
 	#Trivial 3
 	#			Runtime: O(n^2)
