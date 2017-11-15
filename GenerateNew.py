@@ -7,25 +7,25 @@ failureNum = 0
 lastState = 0
 
 def generateNew():
-	global failureNum, lastState
+	global failureNum, lastState, colorList
 
 	lastState = getstate()
 
 	for tile in l.expandGrid(c.solutionGrid):
 		tile.resetMe()
-	colorList.clear()
+	colorList = [(0,0,0)]
 	
 	createPaths()
 	mergeNodes()
 	mergeNodesNew()
 	mergePaths()
-	#checkForRedo()
+	checkForRedo()
 
 	c.computerGrid = l.cloneGrid(c.solutionGrid)
 	for tile in l.expandGrid(c.computerGrid):
 		tile.directions = [c.D.u, c.D.u]
 		if not tile.isNode:
-			tile.number = -1
+			tile.number = 0
 	c.userGrid = l.cloneGrid(c.computerGrid)
 
 	failureNum = 0
@@ -145,7 +145,6 @@ def doNodeStuff(me, dIn, number, length):
 		doNodeStuff(going, d, number, length+1)
 
 		return
-
 	me.isNode = True
 
 def validExtension(head, going):

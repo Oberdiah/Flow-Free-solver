@@ -19,13 +19,14 @@ class Tile():
 		# If it is a node then only the first direction is ever used
 		self.isNode = False
 		# The number is always unique, whereas the color has a very small chance of being duplicated
-		self.number = -1
+		self.imaginary = False
+		self.number = 0
 		self.directions = [c.D.u, c.D.u]
 		self.grid = []
 
 	def resetMe(self):
 		self.isNode = False
-		self.number = -1
+		self.number = 0
 		self.directions = [c.D.u, c.D.u]
 
 	def clone(self):

@@ -63,11 +63,18 @@ import Library as l
 #	another node on the same path, but neither of the nodes follow immediately
 #	after the other.
 
+stepByStep = True
+
 def trysolve():
 	#print(c.grid)
 	trytrivials(c.computerGrid)
 
 def trytrivials(grid):
+	Trivial1(grid)
+	Trivial2(grid)
+	Trivial3(grid)
+	Trivial4(grid)
+
 	#This function attempts trivial solves on the grid.
 	#"Triviality" means it can be proved by only considerning
 	#the direct adjacencies of a node or vertex
@@ -129,6 +136,7 @@ def trytrivials(grid):
 	#				it must travel to these adjacencies. These adjacencies are
 	#				parallel to the paths (A,B) and (B,C), so QED
 
+def Trivial1(grid):
 	#Trivial 1
 	#			Runtime: O(n^2)
 	for row in grid:
@@ -141,7 +149,7 @@ def trytrivials(grid):
 			adjacents = [x for x in adjacents if not l.isWall(x[0])]#get rid of wall tiles
 			adjacents = [x for x in adjacents if not (l.wouldIntersect(tile,x[0]) and l.isHead(x[0]))]#get rid of heads that would cause loops
 			#get rid of heads that are not the same color as this, unless imaginary
-			adjacents = [x for x in adjacents if (not (l.isHead(x[0]) and x[0].number!=tile.number)) or (x[0].imaginary)]
+			adjacents = [x for x in adjacents if (not (l.isHead(x[0]) and x[0].number!=tile.number and not tile.imaginary)) or (x[0].imaginary)]
 			#adjacents = [x for x in adjacents if not (l.isHead(x[0]) and x[0].number!=tile.number)]
 			#if adjacents is only size 1, it only has one possible move:
 			if len(adjacents) == 1:
@@ -152,7 +160,7 @@ def trytrivials(grid):
 				adjacents[0][0].number = tile.number
 				adjacents[0][0].imaginary = tile.imaginary
 
-
+def Trivial2(grid):
 	#Trivial 2
 	#			Runtime: O(n^2)
 	for row in grid:
@@ -173,7 +181,7 @@ def trytrivials(grid):
 				#Should never connect imaginary heads like this,
 				#hence the line below is commented out
 				#adjacents[0][0].imaginary = tile.imaginary
-
+def Trivial3(grid):
 	#Trivial 3
 	#			Runtime: O(n^2)
 	for row in grid:
@@ -213,7 +221,9 @@ def trytrivials(grid):
 					#turn everything in this path into the new number/imaginarity
 					t.number = newNumber
 					t.imaginary = makeImaginary
+				return
 
+def Trivial4(grid):
 	#Trivial 4
 	#			Runtime: O(n^2)
 	for row in grid:
