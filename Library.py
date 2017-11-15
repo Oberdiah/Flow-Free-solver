@@ -133,4 +133,7 @@ def connected(a,b):
 	return a in getAllInPath(b)
 
 def isWall(tile):
-	return not isHead(tile) and tile.number!=0
+	return not isHead(tile) and not isEmpty(tile)
+
+def isEmpty(tile):
+	return tile.number!=0
