@@ -139,6 +139,13 @@ while done == False:
 				text = myfont.render(str(tile.number+1), 1, (0,0,0))
 				rect = text.get_rect()
 				screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
+			elif l.isHead(tile):
+				rad = int(s/3)
+				pygame.draw.circle(screen, color, center, rad)
+				if (tile.imaginary):
+					text = myfont.render("?", 1, (0,0,0))
+					rect = text.get_rect()
+					screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
 
 	pygame.display.update()
 	clock.tick(20)

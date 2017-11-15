@@ -240,4 +240,3 @@ def trytrivials(grid):
 					uglyDuckling.imaginary = True
 					l.numberOfImaginaryLines+=1
 					uglyDuckling.number = l.numberOfImaginaryLines
-					print ("Done")
