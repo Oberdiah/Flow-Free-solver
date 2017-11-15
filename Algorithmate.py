@@ -213,21 +213,26 @@ def trytrivials(grid):
 			vertexAdjacents.append((tile,c.D.u))
 			southern = [x for x in adjacents if x[1]==c.D.s][0][0]
 			adjacentsOfSouthern = l.getAdjacentsWithDirections(southern)
-			adjacentsOfSouthern = [x for x in adjacents if x[1]==c.D.e]
+			adjacentsOfSouthern = [x for x in adjacentsOfSouthern if x[1]==c.D.e]
 			vertexAdjacents.append(adjacentsOfSouthern[0])
-			numbers = [(x[0].number,x[0].imaginary) for x in adjacents]
+			numbers = [(x[0].number,x[0].imaginary) for x in vertexAdjacents]
 			sameNumbers = [ [x for x in numbers if x[0]==numbers[0][0] and x[1]==numbers[0][1]] ]
 			for a in range(1,len(numbers)):
 				sameNumbers.append([x for x in numbers if x[0]==numbers[a][0] and x[1]==numbers[a][1]])
+			duplicatesRemoved = []
+			for a in sameNumbers:
+				if not a in duplicatesRemoved:
+					duplicatesRemoved.append(a)
+			sameNumbers = duplicatesRemoved
 			sameNumbers = [x for x in sameNumbers if len(x)==3]
 			if len(sameNumbers)==1:
 				#3 nodes on same path found
-				example = sameNumbers[0][0]
-				uglyDuckling = [x for x in vertexAdjacents if x.number!=example[0] or x.imaginary!=example[1]]
+				example = [x for x in vertexAdjacents if x[0].number == sameNumbers[0][0][0]][0]
+				uglyDuckling = [x for x in vertexAdjacents if x[0].number!=example[0] or x[0].imaginary!=example[1]][0][0]
 				#(don't worry, the duckling is beautiful on the inside)
 				#uglyDuckling contains the odd one out.  It should become a single
 				#imaginary head with a new number.
-				if (isEmpty(uglyDuckling)) and not isEmpty(example):
+				if (l.isEmpty(uglyDuckling)) and not l.isEmpty(example[0]):
 					#cases where this doesn't work is if uglyDuckling is already full
 					#and where instead of having 3 same-path nodes the vertex merely had
 					#3 empty nodes.  I actually think having both requirements is
@@ -235,3 +240,4 @@ def trytrivials(grid):
 					uglyDuckling.imaginary = True
 					l.numberOfImaginaryLines+=1
 					uglyDuckling.number = l.numberOfImaginaryLines
+					print ("Done")
