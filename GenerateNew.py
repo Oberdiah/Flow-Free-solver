@@ -1,6 +1,7 @@
 import Constants as c
 from random import random, choice, randint, getstate
 import Library as l
+import SpecialSolver
 
 colorList = []
 failureNum = 0
@@ -9,6 +10,7 @@ lastState = 0
 def generateNew():
 	global failureNum, lastState, colorList
 
+	SpecialSolver.doneNodes = False
 	lastState = getstate()
 
 	for tile in l.expandGrid(c.solutionGrid):
@@ -26,6 +28,8 @@ def generateNew():
 		tile.directions = [c.D.u, c.D.u]
 		if not tile.isNode:
 			tile.number = 0
+		else:
+			tile.directionPairs = c.allNodeDirectionPairs
 	c.userGrid = l.cloneGrid(c.computerGrid)
 
 	failureNum = 0

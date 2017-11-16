@@ -1,5 +1,6 @@
 import Constants as c
 from random import random, sample
+import traceback
 
 numberOfImaginaryLines = 0
 
@@ -139,7 +140,7 @@ def addDirection(n1, d1):
 		if d == c.D.u:
 			n1.directions[i] = d1
 			return
-
+	traceback.print_stack()
 	assert False, "There was no free direction to add"
 
 def hasSingleDirection(tile):

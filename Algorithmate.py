@@ -1,6 +1,7 @@
 #performs algorithms
 import Constants as c
 import Library as l
+import SpecialSolver
 
 #Definition of Flow:
 #m*n grid of 2L paired nodes ("heads") and m*n-2L empty nodes, with a hole at
@@ -67,7 +68,8 @@ stepByStep = True
 
 def trysolve():
 	#print(c.grid)
-	trytrivials(c.computerGrid)
+	#trytrivials(c.computerGrid)
+	SpecialSolver.solveAStep(c.computerGrid)
 
 def trytrivials(grid):
 	Trivial1(grid)
@@ -159,6 +161,8 @@ def Trivial1(grid):
 				#adjacents[0][0].color = tile.color
 				adjacents[0][0].number = tile.number
 				adjacents[0][0].imaginary = tile.imaginary
+				if stepByStep:
+					return
 
 def Trivial2(grid):
 	#Trivial 2
@@ -181,6 +185,8 @@ def Trivial2(grid):
 				#Should never connect imaginary heads like this,
 				#hence the line below is commented out
 				#adjacents[0][0].imaginary = tile.imaginary
+				if stepByStep:
+					return
 def Trivial3(grid):
 	#Trivial 3
 	#			Runtime: O(n^2)
@@ -221,7 +227,8 @@ def Trivial3(grid):
 					#turn everything in this path into the new number/imaginarity
 					t.number = newNumber
 					t.imaginary = makeImaginary
-				return
+				if stepByStep:
+					return
 
 def Trivial4(grid):
 	#Trivial 4
@@ -302,3 +309,5 @@ def Trivial4(grid):
 					ducklingAdjacents[1][0].imaginary = makeImaginary
 					ducklingAdjacents[0][0].number = newNumber
 					ducklingAdjacents[1][0].number = newNumber
+					if stepByStep:
+						return

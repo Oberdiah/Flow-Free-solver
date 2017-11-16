@@ -18,22 +18,24 @@ class Tile():
 		self.y = y
 		# If it is a node then only the first direction is ever used
 		self.isNode = False
-		# The number is always unique, whereas the color has a very small chance of being duplicated
 		self.imaginary = False
 		self.number = 0
 		self.directions = [c.D.u, c.D.u]
 		self.grid = []
+		self.directionPairs = c.allDirectionPairs
 
 	def resetMe(self):
 		self.isNode = False
 		self.number = 0
 		self.directions = [c.D.u, c.D.u]
+		self.directionPairs = c.allDirectionPairs
 
 	def clone(self):
 		toReturn = Tile(self.x, self.y)
 		toReturn.isNode = self.isNode
 		toReturn.number = self.number
 		toReturn.grid = self.grid
+		toReturn.directionPairs = self.directionPairs
 		for i in range(2):
 			toReturn.directions[i] = self.directions[i]
 		return toReturn
@@ -155,13 +157,18 @@ while done == False:
 				screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
 			elif l.isHead(tile):
 				rad = int(s/3)
-				pygame.draw.circle(screen, color, center, rad)
+				pygame.draw.circle(screen, color, center, int(rad*0.7))
 				if (tile.imaginary):
 					text = myfont.render("?", 1, (0,0,0))
 					rect = text.get_rect()
 					screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
 			if c.SHOW_ALL_TILE_NUMS:
-				text = myfont.render(str(tile.number+1), 1, (0,0,0))
+				text = myfont.render(str(tile.number), 1, (0,0,0))
+				rect = text.get_rect()
+				screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
+
+			if c.SHOW_ALL_TILE_PAIRS:
+				text = myfont.render(str(len(tile.directionPairs)), 1, (255,0,0))
 				rect = text.get_rect()
 				screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
 

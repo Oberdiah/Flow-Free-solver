@@ -1,5 +1,5 @@
 # Size of overall grid (In boxes)
-GRIDSIZE = 7
+GRIDSIZE = 40
 # Size of boxes (In pixels) (Must be even)
 BOXSIZE = 1000//GRIDSIZE
 # Grid thickness (Must be even)
@@ -23,6 +23,16 @@ class D():
 	w = (-1,0)
 	u = (0,0)
 
+class P():
+	cNW = [D.n, D.w]
+	cSW = [D.s, D.w]
+	cSE = [D.s, D.e]
+	cNE = [D.n, D.e]
+	lNS = [D.n, D.s]
+	lEW = [D.e, D.w]
+
+allNodeDirectionPairs = [[D.n, D.u], [D.s, D.u], [D.e, D.u], [D.w, D.u]]
+allDirectionPairs = [P.cNE, P.cSE, P.cNW, P.cSW, P.lEW, P.lNS]
 allDirections = [D.n, D.s, D.e, D.w]
 
 all3x3Directions = [(-1,1),  (0,1),  (1,1),
@@ -30,3 +40,4 @@ all3x3Directions = [(-1,1),  (0,1),  (1,1),
 					(-1,-1), (0,-1), (1,-1)]
 
 SHOW_ALL_TILE_NUMS = False
+SHOW_ALL_TILE_PAIRS = True
