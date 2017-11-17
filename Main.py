@@ -87,6 +87,15 @@ while done == False:
 				print(GenerateNew.lastState)
 			if event.key == pygame.K_i:
 				GenerateNew.mergeNodes()
+			if event.key == pygame.K_1:
+				print("Switching solution mode to RICH")
+				l.solutionMode = c.S.RICH
+			if event.key == pygame.K_2:
+				print("Switching solution mode to BAIL")
+				l.solutionMode = c.S.BAIL
+			if event.key == pygame.K_3:
+				print("Switching solution mode to HARR")
+				l.solutionMode = c.S.HARR
 			if event.key == pygame.K_e:
 				if currentMouseBox != [-1,-1]:
 					n1 = c.userGrid[currentMouseBox[0]][currentMouseBox[1]]

@@ -15,6 +15,12 @@ userGrid = []
 solutionGrid = []
 computerGrid = []
 
+#Solution mode enum
+class S():
+	RICH = 0
+	BAIL = 1
+	HARR = 2
+
 # Essentially a directions Enum
 class D():
 	n = (0,-1)
