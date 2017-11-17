@@ -4,6 +4,7 @@ import Library as l
 import GenerateNew
 from random import random, choice, getstate, setstate, seed
 import Algorithmate
+import colorsys
 
 pygame.init()
 myfont = pygame.font.SysFont("monospace", int(c.BOXSIZE/2))
@@ -28,7 +29,7 @@ class Tile():
 		self.isNode = False
 		self.number = 0
 		self.directions = [c.D.u, c.D.u]
-		self.directionPairs = c.allDirectionPairs
+		self.directionPairs = list(c.allDirectionPairs)
 
 	def clone(self):
 		toReturn = Tile(self.x, self.y)
@@ -131,11 +132,12 @@ while done == False:
 		for y, tile in enumerate(col):
 			s = c.BOXSIZE
 			gt = c.GRIDTHICKNESS
-			color = (0,0,0)
+			color = (50,50,50)
 			if tile.imaginary:
 				color = (127,127,127)
 			else:
 				color = GenerateNew.colorList[tile.number]
+
 			center = (int((x+0.5)*s), int((y+0.5)*s))
 			pygame.draw.rect(screen, (255,255,255), (x*s+(gt/2), y*s+(gt/2), s-gt, s-gt))
 
@@ -170,7 +172,18 @@ while done == False:
 			if c.SHOW_ALL_TILE_PAIRS:
 				text = myfont.render(str(len(tile.directionPairs)), 1, (255,0,0))
 				rect = text.get_rect()
-				screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
+				#screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
+
+				j = 0
+				for direc in tile.directionPairs:
+					myCenter = (int((x+0.3*(j % 3)+0.2)*s), int((y+0.2+0.3*(j//3))*s))
+					j += 1
+					pygame.draw.circle(screen, (200, 200, 200), myCenter, int(s/10))
+					for i in range(2):
+						directionBias = (direc[i][0]/2, direc[i][1]/2)
+						loc = (myCenter[0]+directionBias[0]*s*0.15, myCenter[1]+directionBias[1]*s*0.15)
+
+						pygame.draw.line(screen, (100, 100, 100), loc, myCenter, int(s/40))
 
 	pygame.display.update()
 	clock.tick(100)
