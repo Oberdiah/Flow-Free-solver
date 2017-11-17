@@ -67,9 +67,10 @@ import SpecialSolver
 stepByStep = True
 
 def trysolve():
-	#print(c.grid)
-	#trytrivials(c.computerGrid)
-	SpecialSolver.solveAStep(c.computerGrid)
+	if l.solutionMode == c.S.BAIL:
+		trytrivials(c.computerGrid)
+	elif l.solutionMode == c.S.RICH:
+		SpecialSolver.solveAStep(c.computerGrid)
 
 def trytrivials(grid):
 	Trivial1(grid)

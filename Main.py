@@ -60,6 +60,8 @@ def testingFunc():
 	GenerateNew.generateNew()
 	pass
 
+showTilePossibilityNum = c.SHOW_ALL_TILE_PAIRS
+
 done = False
 while done == False:
 	for event in pygame.event.get():
@@ -79,10 +81,22 @@ while done == False:
 			if event.key == pygame.K_c:
 				print("Toggling showing computer")
 				showComputer = not showComputer
+			if event.key == pygame.K_LSHIFT:
+				print("Toggling tile possibilities")
+				showTilePossibilityNum = not showTilePossibilityNum
 			if event.key == pygame.K_y:
 				print(GenerateNew.lastState)
 			if event.key == pygame.K_i:
 				GenerateNew.mergeNodes()
+			if event.key == pygame.K_1:
+				print("Switching solution mode to RICH")
+				l.solutionMode = c.S.RICH
+			if event.key == pygame.K_2:
+				print("Switching solution mode to BAIL")
+				l.solutionMode = c.S.BAIL
+			if event.key == pygame.K_3:
+				print("Switching solution mode to HARR")
+				l.solutionMode = c.S.HARR
 			if event.key == pygame.K_e:
 				if currentMouseBox != [-1,-1]:
 					n1 = c.userGrid[currentMouseBox[0]][currentMouseBox[1]]
@@ -169,7 +183,7 @@ while done == False:
 				rect = text.get_rect()
 				screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
 
-			if c.SHOW_ALL_TILE_PAIRS:
+			if showTilePossibilityNum:#c.SHOW_ALL_TILE_PAIRS:
 				text = myfont.render(str(len(tile.directionPairs)), 1, (255,0,0))
 				rect = text.get_rect()
 				#screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))

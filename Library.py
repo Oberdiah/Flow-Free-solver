@@ -3,6 +3,7 @@ from random import random, sample
 import traceback
 
 numberOfImaginaryLines = 0
+solutionMode = c.S.RICH
 
 def shuffle(lst):
 	return sample(lst, len(lst))
