@@ -59,6 +59,8 @@ def testingFunc():
 	GenerateNew.generateNew()
 	pass
 
+showTilePossibilityNum = c.SHOW_ALL_TILE_PAIRS
+
 done = False
 while done == False:
 	for event in pygame.event.get():
@@ -78,6 +80,9 @@ while done == False:
 			if event.key == pygame.K_c:
 				print("Toggling showing computer")
 				showComputer = not showComputer
+			if event.key == pygame.K_LSHIFT:
+				print("Toggling tile possibilities")
+				showTilePossibilityNum = not showTilePossibilityNum
 			if event.key == pygame.K_y:
 				print(GenerateNew.lastState)
 			if event.key == pygame.K_i:
@@ -167,7 +172,7 @@ while done == False:
 				rect = text.get_rect()
 				screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
 
-			if c.SHOW_ALL_TILE_PAIRS:
+			if showTilePossibilityNum:#c.SHOW_ALL_TILE_PAIRS:
 				text = myfont.render(str(len(tile.directionPairs)), 1, (255,0,0))
 				rect = text.get_rect()
 				screen.blit(text, (center[0]-rect.width/2, center[1]-rect.height/2))
