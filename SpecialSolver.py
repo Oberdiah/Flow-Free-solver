@@ -34,6 +34,8 @@ def checkMe(tile):
 				if tile.number != 0 and adj[0].number != 0 and adj[0].number != tile.number:
 					changePairs(tile, adj[1], False)
 
+
+
 				# If something is pointing into me
 				if isPointing(adj[0], l.getOpposite(adj[1])):
 					changePairs(tile, adj[1], True)
@@ -48,10 +50,39 @@ def checkMe(tile):
 				if not isPointing(adj[0], l.getOpposite(adj[1])) and isDecided(adj[0]):
 					changePairs(tile, adj[1], False)
 
-				# Special node code
+				# Special node-code
 				if tile.isNode and adj[0].isNode:
 					if adj[0].number != tile.number:
 						changePairs(tile, adj[1], False)
+
+				for pair in diagonalRemove(adj[0]):
+					adj[0].diagonalPairs.remove(pair)
+
+def diagonalRemove(tile):
+	toReturn = []
+	for p in c.allDirectionPairs:
+		if diagonalWall(tile, p):
+			toReturn.append(p)
+
+def diagonalWall(tile, direc):
+	if tile.isNode:
+		return False
+
+	for d in direc:
+		nextTo = l.getNextTo(tile, *d)
+		if nextTo is None:
+			return True
+		if isDecided(nextTo):
+			if not isPointing(nextTo, l.getOpposite(d)):
+				return True
+
+	nextTile = l.getNextTo(l.getNextTo(tile, *direc[0]), *direc[1])
+
+	if nextTile is None:
+		return True
+
+	return diagonalWall(nextTile, direc)
+
 
 def forwardPredict(grid):
 	for tile in l.expandGrid(grid):
