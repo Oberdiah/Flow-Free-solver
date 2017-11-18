@@ -1,5 +1,5 @@
 import Constants as c
-from random import random, choice, randint, getstate
+from random import random, choice, randint, getstate, shuffle
 import Library as l
 import SpecialSolver
 
@@ -9,6 +9,7 @@ lastState = 0
 
 tilesToGen = []
 nodesPlaced = 0
+headList = []
 def generateNew():
 	#This tries a new method of generating a board,
 	#by first filling it with a series of trivial paths
@@ -22,10 +23,12 @@ def generateNew():
 
 	for tile in l.expandGrid(c.solutionGrid):
 		tile.resetMe()
-	colorList = [(0,0,0)]
+	colorList = []#[(0,0,0)]
 
 	tilesToGen = l.expandGrid(c.solutionGrid)
 	while fillBoardWithTrivials():
+		continue
+	while combineBoardTrivials():
 		continue
 	#[add the combinification code here to make bigger paths]
 
@@ -40,8 +43,26 @@ def generateNew():
 
 	failureNum = 0
 
+def combineBoardTrivials():
+	global headList
+	didAMerge = False
+	for h in headList:
+		adjacents = l.getAdjacents(h)
+		adjacents = [x for x in adjacents if x is not None]
+		adjacents = [x for x in adjacents if l.isHead(h)]
+		adjacents = [x for x in adjacents if not l.wouldIntersect(x,h)]
+		shuffle(adjacents)
+		if len(adjacents)>0:
+			didAMerge = True
+			thePathToBeShovedIntoThisOne = l.getAllInPath_algorithms(adjacents[0])
+			adjacents[0].isNode = False
+			h.isNode = False
+			for p in thePathToBeShovedIntoThisOne:
+				p.number = h.number
+	return didAMerge
+
 def fillBoardWithTrivials():
-	global nodesPlaced,tilesToGen
+	global nodesPlaced,tilesToGen,headList
 	if (len(tilesToGen)) == 0:
 		return False
 	tilesum = int(random()*len(tilesToGen)) #Get random tile
@@ -61,6 +82,8 @@ def fillBoardWithTrivials():
 			whichAdj.number = tile.number
 			whichAdj.imaginary = False
 			colorList.append(l.randomColor())
+			headList.append(tile)
+			headList.append(whichAdj)
 		else:
 			#This is more complicated - this is a singleton node and cannot move
 			#anywhere.  These are illegal, so what we need to do is join it with
@@ -74,6 +97,8 @@ def fillBoardWithTrivials():
 			tile.isNode = True
 			tile.number = adjacentToMergeTo[0].number
 			tile.imaginary = False
+			headList.append(tile)
+			headList.remove(adjacentToMergeTo[0])
 		return True
 	else:
 		#re-run.  This isn't a problem, the random number just landed on a tile that
