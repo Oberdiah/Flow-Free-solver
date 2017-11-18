@@ -16,7 +16,7 @@ def generateNew():
 	#As a byproduct, it will more rarely have very long paths going
 	#along walls (which is a shame), however it is guaranteed to
 	#always be a satisfiable Flow board.
-	global failureNum, lastState, colorList, tilesToGen
+	global failureNum, lastState, colorList, tilesToGen, nodesPlaced
 
 	SpecialSolver.doneNodes = False
 	lastState = getstate()
@@ -24,6 +24,8 @@ def generateNew():
 	for tile in l.expandGrid(c.solutionGrid):
 		tile.resetMe()
 	colorList = [(0,0,0)]
+	nodesPlaced = 0
+	tilesToGen = []
 
 	tilesToGen = l.expandGrid(c.solutionGrid)
 	while fillBoardWithTrivials():
@@ -64,7 +66,7 @@ def combineBoardTrivials():
 	return didAMerge
 
 def fillBoardWithTrivials():
-	global nodesPlaced,tilesToGen,headList
+	global nodesPlaced,tilesToGen,headList,colorList
 	if (len(tilesToGen)) == 0:
 		return False
 	tilesum = int(random()*len(tilesToGen)) #Get random tile
