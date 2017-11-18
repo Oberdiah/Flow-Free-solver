@@ -8,13 +8,14 @@ failureNum = 0
 lastState = 0
 
 tilesToGen = []
+nodesPlaced = 0
 def generateNew():
 	#This tries a new method of generating a board,
 	#by first filling it with a series of trivial paths
 	#As a byproduct, it will more rarely have very long paths going
 	#along walls (which is a shame), however it is guaranteed to
 	#always be a satisfiable Flow board.
-	global failureNum, lastState, colorList
+	global failureNum, lastState, colorList, tilesToGen
 
 	SpecialSolver.doneNodes = False
 	lastState = getstate()
@@ -40,18 +41,20 @@ def generateNew():
 	failureNum = 0
 
 def fillBoardWithTrivials():
+	global nodesPlaced,tilesToGen
 	if (len(tilesToGen)) == 0:
 		return False
 	tilesum = int(random()*len(tilesToGen)) #Get random tile
 	tile = tilesToGen[tilesum]
 	tilesToGen.pop(tilesum)
-	if not l.isEmpty(tile):
+	if l.isEmpty(tile):
 		#can put thingamajig here
 		adjacents = l.getReachableAdjacents_generation(tile)
 		if len(adjacents)>0:
 			#simple case, can add new node directly adjacent to it wherever
 			tile.isNode = True
-			tile.number = tilesPlaced/2 - 1
+			tile.number = nodesPlaced
+			nodesPlaced+=1
 			tile.imaginary = False
 			whichAdj = adjacents[int(random()*len(adjacents))]
 			whichAdj.isNode = True
@@ -67,9 +70,9 @@ def fillBoardWithTrivials():
 			adjacents = l.getAdjacents(tile)
 			adjacentToMergeTo = [x for x in whichPath if x in adjacents]
 			assert len(adjacentToMergeTo)==1,"Two valid merges is contradiction, and zero is preposterous!"
-			adjacentToMergeTo.isNode = False
+			adjacentToMergeTo[0].isNode = False
 			tile.isNode = True
-			tile.number = adjacentToMergeTo.number
+			tile.number = adjacentToMergeTo[0].number
 			tile.imaginary = False
 		return True
 	else:
