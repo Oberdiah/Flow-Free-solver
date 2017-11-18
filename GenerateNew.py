@@ -9,6 +9,11 @@ lastState = 0
 
 tilesToGen = []
 def generateNew():
+	#This tries a new method of generating a board,
+	#by first filling it with a series of trivial paths
+	#As a byproduct, it will more rarely have very long paths going
+	#along walls (which is a shame), however it is guaranteed to
+	#always be a satisfiable Flow board.
 	global failureNum, lastState, colorList
 
 	SpecialSolver.doneNodes = False
@@ -21,6 +26,7 @@ def generateNew():
 	tilesToGen = l.expandGrid(c.solutionGrid)
 	while fillBoardWithTrivials():
 		continue
+	#[add the combinification code here to make bigger paths]
 
 	c.computerGrid = l.cloneGrid(c.solutionGrid)
 	for tile in l.expandGrid(c.computerGrid):
