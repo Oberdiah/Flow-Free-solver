@@ -28,7 +28,7 @@ def generateNew():
 	tilesToGen = l.expandGrid(c.solutionGrid)
 	while fillBoardWithTrivials():
 		continue
-	while False:#combineBoardTrivials():
+	while combineBoardTrivials():
 		continue
 	#[add the combinification code here to make bigger paths]
 
@@ -47,18 +47,20 @@ def combineBoardTrivials():
 	global headList
 	didAMerge = False
 	for h in headList:
-		adjacents = l.getAdjacents(h)
-		adjacents = [x for x in adjacents if x is not None]
-		adjacents = [x for x in adjacents if h.isNode]
-		adjacents = [x for x in adjacents if not l.wouldIntersect_generator(x,h)]
-		shuffle(adjacents)
-		if len(adjacents)>0:
-			didAMerge = True
-			thePathToBeShovedIntoThisOne = l.getAllInPath_generator(adjacents[0])
-			adjacents[0].isNode = False
-			h.isNode = False
-			for p in thePathToBeShovedIntoThisOne:
-				p.number = h.number
+		if h.isNode:
+			adjacents = l.getAdjacents(h)
+			adjacents = [x for x in adjacents if x is not None]
+			adjacents = [x for x in adjacents if x.isNode]
+			adjacents = [x for x in adjacents if not l.wouldIntersect_generator(x,h)]
+			shuffle(adjacents)
+			if len(adjacents)>0:
+				didAMerge = True
+				thePathToBeShovedIntoThisOne = l.getAllInPath_generator(adjacents[0])
+				adjacents[0].isNode = False
+				h.isNode = False
+				l.createBond(h,adjacents[0])
+				for p in thePathToBeShovedIntoThisOne:
+					p.number = h.number
 	return didAMerge
 
 def fillBoardWithTrivials():
