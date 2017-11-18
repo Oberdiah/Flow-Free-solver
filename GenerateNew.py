@@ -84,6 +84,7 @@ def fillBoardWithTrivials():
 			colorList.append(l.randomColor())
 			headList.append(tile)
 			headList.append(whichAdj)
+			l.createBond(tile,whichAdj)
 		else:
 			#This is more complicated - this is a singleton node and cannot move
 			#anywhere.  These are illegal, so what we need to do is join it with
@@ -91,14 +92,15 @@ def fillBoardWithTrivials():
 			pathsToJoin = l.getJoinablePaths_generation(tile)
 			whichPath = pathsToJoin[int(random()*len(pathsToJoin))]
 			adjacents = l.getAdjacents(tile)
-			adjacentToMergeTo = [x for x in whichPath if x in adjacents]
-			assert len(adjacentToMergeTo)==1,"Two valid merges is contradiction, and zero is preposterous!"
+			adjacentToMergeTo = [x for x in whichPath if x in adjacents and l.isHead(x)]
+			assert len(adjacentToMergeTo)==1,"Two valid merges is contradiction, and zero is preposterous!: "+str(len(adjacentToMergeTo))
 			adjacentToMergeTo[0].isNode = False
 			tile.isNode = True
 			tile.number = adjacentToMergeTo[0].number
 			tile.imaginary = False
 			headList.append(tile)
 			headList.remove(adjacentToMergeTo[0])
+			l.createBond(tile,adjacentToMergeTo[0])
 		return True
 	else:
 		#re-run.  This isn't a problem, the random number just landed on a tile that

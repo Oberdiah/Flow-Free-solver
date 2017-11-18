@@ -194,7 +194,7 @@ def getReachableAdjacents_generation(a):#Used for generation, will most definite
 def getJoinablePaths_generation(a):#Used for generation
 	adjacents = getAdjacents(a)
 	adjacents = [x for x in adjacents if x is not None]
-	pathCandidates = [getAllInPath_algorithms(x) for x in adjacents]
+	pathCandidates = [getAllInPath(x) for x in adjacents]#[getAllInPath_algorithms(x) for x in adjacents]
 	pathCandidates = [x for x in pathCandidates if not wouldIntersect(a,x)]
 	assert len(pathCandidates)!=0, "Sticky situation, try regeneration."
 	return pathCandidates
