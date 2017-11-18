@@ -20,7 +20,7 @@ def generateNew():
 
 	tilesToGen = l.expandGrid(c.solutionGrid)
 	while fillBoardWithTrivials():
-		pass
+		continue
 
 	c.computerGrid = l.cloneGrid(c.solutionGrid)
 	for tile in l.expandGrid(c.computerGrid):
