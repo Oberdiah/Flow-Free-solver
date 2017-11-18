@@ -182,3 +182,19 @@ def wouldIntersect(a,b):
 				if not (isHead(n1) and isHead(n2)):
 					return True
 	return False
+
+def getReachableAdjacents_generation(a):#Used for generation, will most definitely
+										#not work for solving code
+	adjacents = getAdjacents(a)
+	adjacents = [x for x in adjacents if x is not None]
+	adjacents = [x for x in adjacents if not isWall(x)]
+	adjacents = [x for x in adjacents if not isHead(x)]
+	return adjacents
+
+def getJoinablePaths_generation(a):#Used for generation
+	adjacents = getAdjacents(a)
+	adjacents = [x for x in adjacents if x is not None]
+	pathCandidates = [getAllInPath_algorithms(x) for x in adjacents]
+	pathCandidates = [x for x in pathCandidates if not wouldIntersect(a,x)]
+	assert len(pathCandidates)!=0, "Sticky situation, try regeneration."
+	return pathCandidates

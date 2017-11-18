@@ -7,6 +7,7 @@ colorList = []
 failureNum = 0
 lastState = 0
 
+tilesToGen = []
 def generateNew():
 	global failureNum, lastState, colorList
 
@@ -16,7 +17,71 @@ def generateNew():
 	for tile in l.expandGrid(c.solutionGrid):
 		tile.resetMe()
 	colorList = [(0,0,0)]
-	
+
+	tilesToGen = l.expandGrid(c.solutionGrid)
+	while fillBoardWithTrivials():
+		pass
+
+	c.computerGrid = l.cloneGrid(c.solutionGrid)
+	for tile in l.expandGrid(c.computerGrid):
+		tile.directions = [c.D.u, c.D.u]
+		if not tile.isNode:
+			tile.number = 0
+		else:
+			tile.directionPairs = c.allNodeDirectionPairs
+	c.userGrid = l.cloneGrid(c.computerGrid)
+
+	failureNum = 0
+
+def fillBoardWithTrivials():
+	if (len(tilesToGen)) == 0:
+		return False
+	tilesum = int(random()*len(tilesToGen)) #Get random tile
+	tile = tilesToGen[tilesum]
+	tilesToGen.pop(tilesum)
+	if not l.isEmpty(tile):
+		#can put thingamajig here
+		adjacents = l.getReachableAdjacents_generation(tile)
+		if len(adjacents)>0:
+			#simple case, can add new node directly adjacent to it wherever
+			tile.isNode = True
+			tile.number = tilesPlaced/2 - 1
+			tile.imaginary = False
+			whichAdj = adjacents[int(random()*len(adjacents))]
+			whichAdj.isNode = True
+			whichAdj.number = tile.number
+			whichAdj.imaginary = False
+			colorList.append(l.randomColor())
+		else:
+			#This is more complicated - this is a singleton node and cannot move
+			#anywhere.  These are illegal, so what we need to do is join it with
+			#an adjacent path.
+			pathsToJoin = l.getJoinablePaths_generation(tile)
+			whichPath = pathsToJoin[int(random()*len(pathsToJoin))]
+			adjacents = l.getAdjacents(tile)
+			adjacentToMergeTo = [x for x in whichPath if x in adjacents]
+			assert len(adjacentToMergeTo)==1,"Two valid merges is contradiction, and zero is preposterous!"
+			adjacentToMergeTo.isNode = False
+			tile.isNode = True
+			tile.number = adjacentToMergeTo.number
+			tile.imaginary = False
+		return True
+	else:
+		#re-run.  This isn't a problem, the random number just landed on a tile that
+		#had the counterpart to a generated head on it.  It has now been popped from the list,
+		#so no infinite loop shenanigans will happen
+		return True
+
+def generateNew_old():
+	global failureNum, lastState, colorList
+
+	SpecialSolver.doneNodes = False
+	lastState = getstate()
+
+	for tile in l.expandGrid(c.solutionGrid):
+		tile.resetMe()
+	colorList = [(0,0,0)]
+
 	createPaths()
 	mergeNodes()
 	mergeNodesNew()
@@ -54,7 +119,7 @@ def mergePaths():
 						for p in fullPath:
 							p.number = tile.number
 						break
-							
+
 def numberNear(tile, number):
 	numNear = 0
 	for q in c.all3x3Directions:
