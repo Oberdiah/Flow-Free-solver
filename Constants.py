@@ -1,7 +1,8 @@
 # Size of overall grid (In boxes)
 GRIDSIZE = 10
 # Size of boxes (In pixels) (Must be even)
-BOXSIZE = 1000//GRIDSIZE
+BOXSIZE = 850//GRIDSIZE #If its any larger than this it goes off the bottom of my screen
+						#feel free to make it automatically detect screen resolution
 # Grid thickness (Must be even)
 GRIDTHICKNESS = 2
 # The minimum snake length
