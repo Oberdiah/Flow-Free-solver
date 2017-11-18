@@ -23,7 +23,7 @@ def generateNew():
 
 	for tile in l.expandGrid(c.solutionGrid):
 		tile.resetMe()
-	colorList = []#[(0,0,0)]
+	colorList = [(0,0,0)]
 
 	tilesToGen = l.expandGrid(c.solutionGrid)
 	while fillBoardWithTrivials():
@@ -74,8 +74,8 @@ def fillBoardWithTrivials():
 		if len(adjacents)>0:
 			#simple case, can add new node directly adjacent to it wherever
 			tile.isNode = True
-			tile.number = nodesPlaced
 			nodesPlaced+=1
+			tile.number = nodesPlaced
 			tile.imaginary = False
 			whichAdj = adjacents[int(random()*len(adjacents))]
 			whichAdj.isNode = True
@@ -92,7 +92,7 @@ def fillBoardWithTrivials():
 			pathsToJoin = l.getJoinablePaths_generation(tile)
 			whichPath = pathsToJoin[int(random()*len(pathsToJoin))]
 			adjacents = l.getAdjacents(tile)
-			adjacentToMergeTo = [x for x in whichPath if x in adjacents and l.isHead(x)]
+			adjacentToMergeTo = [x for x in whichPath if x in adjacents and x.isNode]
 			assert len(adjacentToMergeTo)==1,"Two valid merges is contradiction, and zero is preposterous!: "+str(len(adjacentToMergeTo))
 			adjacentToMergeTo[0].isNode = False
 			tile.isNode = True
