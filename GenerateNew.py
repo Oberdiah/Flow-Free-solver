@@ -48,7 +48,11 @@ def generateNew():
 def combineBoardTrivials():
 	global headList
 	didAMerge = False
-	for h in headList:
+	shuffle(headList) #shuffle to get randomness
+	#we need to continously keep headList in ordered order so that smallest paths get priority
+	headList = sorted(headList,key=lambda thingy : thingy[1])
+	for a in headList:
+		h = a[0]
 		if h.isNode:
 			adjacents = l.getAdjacents(h)
 			adjacents = [x for x in adjacents if x is not None]
@@ -62,6 +66,7 @@ def combineBoardTrivials():
 				h.isNode = False
 				l.createBond(h,adjacents[0])
 				for p in thePathToBeShovedIntoThisOne:
+					a[1]+=1
 					p.number = h.number
 	return didAMerge
 
@@ -86,8 +91,8 @@ def fillBoardWithTrivials():
 			whichAdj.number = tile.number
 			whichAdj.imaginary = False
 			colorList.append(l.randomColor())
-			headList.append(tile)
-			headList.append(whichAdj)
+			headList.append([tile,2])
+			headList.append([whichAdj,2])
 			l.createBond(tile,whichAdj)
 		else:
 			#This is more complicated - this is a singleton node and cannot move
@@ -102,8 +107,13 @@ def fillBoardWithTrivials():
 			tile.isNode = True
 			tile.number = adjacentToMergeTo[0].number
 			tile.imaginary = False
-			headList.append(tile)
-			headList.remove(adjacentToMergeTo[0])
+			headList.append([tile,3])
+			for i in range(len(headList)):
+				if headList[i] == adjacentToMergeTo[0]:
+					headList[i] = None
+				if headList[i][0].number==tile.number:
+					headList[i] = [headList[i][0],3]
+			headList = [x for x in headList if x is not None]
 			l.createBond(tile,adjacentToMergeTo[0])
 		return True
 	else:
