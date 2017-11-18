@@ -51,6 +51,14 @@ def getAllInPath(n1):
 			all.extend(getAllInPathFromDirection(n1, getNextTo(n1, *d), []))
 	return all
 
+def getAllInPath_generator(n1):
+	assert n1.isNode, "Because I'm lazy, most be node!"
+	all = [n1]
+	for d in n1.directions:
+		if d != c.D.u:
+			all.extend(getAllInPathFromDirection_generator(n1, getNextTo(n1, *d), []))
+	return all
+
 def getAllInPath_algorithms(n1):
 	all = [n1]
 	if isEmpty(n1):
@@ -60,6 +68,15 @@ def getAllInPath_algorithms(n1):
 			all.extend(getAllInPathFromDirection_algorithms(n1, getNextTo(n1, *d), []))
 	return all
 
+
+def getAllInPathFromDirection_generator(tileBefore, tile, currentStack):
+	currentStack.append(tile)
+	if not tile.isNode:
+		newTile = getNextTo(tile, *tile.directions[0])
+		if newTile == tileBefore:
+			newTile = getNextTo(tile, *tile.directions[1])
+		getAllInPathFromDirection_generator(tile, newTile, currentStack)
+	return currentStack
 
 def getAllInPathFromDirection(tileBefore, tile, currentStack):
 	currentStack.append(tile)
@@ -183,6 +200,17 @@ def wouldIntersect(a,b):
 					return True
 	return False
 
+def wouldIntersect_generator(a,b):
+	assert a.isNode and b.isNode, "Must start at the nodey-wodies"
+	p1 = getAllInPath_generator(a)
+	p2 = getAllInPath_generator(b)
+	for n1 in p1:
+		for n2 in p2:
+			if n2 in [x for x in getAdjacents(n1) if not isEmpty(x)]:
+				if not (n1 == a and n2 == b):
+					return True
+	return False
+
 def getReachableAdjacents_generation(a):#Used for generation, will most definitely
 										#not work for solving code
 	adjacents = getAdjacents(a)
@@ -194,7 +222,18 @@ def getReachableAdjacents_generation(a):#Used for generation, will most definite
 def getJoinablePaths_generation(a):#Used for generation
 	adjacents = getAdjacents(a)
 	adjacents = [x for x in adjacents if x is not None]
-	pathCandidates = [getAllInPath(x) for x in adjacents]#[getAllInPath_algorithms(x) for x in adjacents]
-	pathCandidates = [x for x in pathCandidates if not wouldIntersect(a,x)]
+	pathCandidates = [getAllInPath(x) for x in adjacents if x.isNode]#[getAllInPath_algorithms(x) for x in adjacents]
+	pathCandidateNumbers = [x[0].number for x in pathCandidates]
+	pathCandidateNumberCount = [[-1,0] for x in pathCandidates]
+	for x in pathCandidateNumbers:
+		for y in pathCandidateNumberCount:
+			if x==y[0]:
+				y[1]+=1
+			elif -1==y[0]:
+				y[0]=x
+				y[1]=1
+	numbersAllowed = [x[0] for x in pathCandidateNumberCount if x[1]==1]
+	pathCandidates = [x for x in pathCandidates if x[0].number in numbersAllowed]
+	#pathCandidates = [x for x in pathCandidates if not wouldIntersect_generator(a,x)]
 	assert len(pathCandidates)!=0, "Sticky situation, try regeneration."
 	return pathCandidates
