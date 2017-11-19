@@ -49,8 +49,8 @@ def combineBoardTrivials():
 	global headList
 	didAMerge = False
 	shuffle(headList) #shuffle to get randomness
-	#we need to continously keep headList in ordered order so that smallest paths get priority
-	headList = sorted(headList,key=lambda thingy : thingy[1])
+	#we need to continously keep headList in ordered order so that largest paths get priority
+	headList = sorted(headList,key=lambda thingy : c.GRIDSIZE*c.GRIDSIZE - thingy[1])
 	for a in headList:
 		h = a[0]
 		if h.isNode:
